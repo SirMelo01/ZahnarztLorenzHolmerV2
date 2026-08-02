@@ -1,0 +1,180 @@
+{% extends "base.html" %}
+{% load compress static %}
+
+{% block title %}{{ blog.title }} | Blog | {{ block.super }}{% endblock title %}
+{% block meta_description %}{{ blog_excerpt }}{% endblock %}
+{% block canonical_url %}{{ canonical_url }}{% endblock %}
+{% block og_title %}{{ blog.title }} | Blog Dr. Lorenz Holmer{% endblock %}
+{% block og_description %}{{ blog_excerpt }}{% endblock %}
+{% block og_image %}{% if blog_image_url %}{{ blog_image_url }}{% else %}{{ block.super }}{% endif %}{% endblock %}
+{% block og_url %}{{ canonical_url }}{% endblock %}
+{% block og_type %}article{% endblock %}
+{% block twitter_title %}{{ blog.title }} | Blog Dr. Lorenz Holmer{% endblock %}
+{% block twitter_description %}{{ blog_excerpt }}{% endblock %}
+{% block twitter_image %}{% if blog_image_url %}{{ blog_image_url }}{% else %}{{ block.super }}{% endif %}{% endblock %}
+
+{% block extra_meta %}
+<meta property="article:published_time" content="{{ blog.date|date:'c' }}">
+<meta property="article:modified_time" content="{{ blog.last_updated|date:'c' }}">
+<meta property="article:author" content="{{ blog.author }}">
+{% endblock %}
+
+{% block structured_data %}
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BlogPosting",
+  "headline": "{{ blog.title|escapejs }}",
+  "url": "{{ canonical_url }}",
+  "description": "{{ blog_excerpt|escapejs }}",
+  "inLanguage": "{{ blog_language|default:request.LANGUAGE_CODE|escapejs }}",
+  "wordCount": {{ blog_word_count|default:0 }},
+  "isAccessibleForFree": true,
+  "datePublished": "{{ blog.date|date:'c' }}",
+  "dateModified": "{{ blog.last_updated|date:'c' }}",
+  "author": {
+    "@type": "Person",
+    "name": "{{ blog.author|escapejs }}"
+  },
+  "mainEntityOfPage": {
+    "@type": "WebPage",
+    "@id": "{{ canonical_url }}"
+  },
+  {% if blog_image_url %}
+  "image": {
+    "@type": "ImageObject",
+    "url": "{{ blog_image_url }}",
+    "name": "{{ blog_image_title|escapejs }}",
+    "caption": "{{ blog_image_caption|default:blog_image_alt|escapejs }}"
+  },
+  "thumbnailUrl": "{{ blog_image_url }}",
+  {% endif %}
+  "publisher": {
+    "@type": "Organization",
+    "name": "{{ owner_data.company_name|default:'Zahnarztpraxis Dr. Lorenz Holmer'|escapejs }}"
+  }
+}
+</script>
+{% endblock %}
+
+{% block css %}
+{% compress css %}
+<link rel="stylesheet" href="{% static 'css/cms/slick/slick-carousel.css' %}"/>
+<link rel="stylesheet" href="{% static 'css/cms/slick/slick-theme.css' %}"/>
+<link href="{% static 'css/prism/prism.css' %}" rel="stylesheet">
+<link href="{% static 'css/blog.css' %}" rel="stylesheet">
+<link href="{% static 'css/rich-text.css' %}" rel="stylesheet">
+{% endcompress %}
+<link rel="stylesheet" type="text/css" href="{% static 'css/libs/katex/katex.min.css' %}" />
+{% endblock %}
+
+{% block content %}
+<main class="bg-white">
+  <section class="border-b border-gray-200 bg-gray-100">
+    <div class="mx-auto max-w-6xl px-4 py-6">
+      <a href="{% url 'blog:blog' %}" class="inline-flex items-center gap-2 rounded-full border border-[#262C5D] bg-white px-4 py-2 text-sm font-semibold text-[#262C5D] shadow-sm transition hover:bg-[#262C5D] hover:text-white">
+        <i class="bi bi-arrow-left-short text-base leading-none"></i>
+        <span>Zur Blogübersicht</span>
+      </a>
+      <div class="mt-4 flex flex-wrap items-center gap-x-5 gap-y-2 text-sm text-gray-600">
+        <span class="text-sm font-semibold text-[#262C5D]">Praxiswissen</span>
+        <time class="inline-flex items-center gap-2" pubdate datetime="{{ blog.date|date:'Y-m-d' }}">
+          <i class="bi bi-calendar3"></i>{{ blog.date|date:"d.m.Y" }}
+        </time>
+        {% if blog.last_updated != blog.date %}
+        <time class="inline-flex items-center gap-2" datetime="{{ blog.last_updated|date:'Y-m-d' }}">
+          <i class="bi bi-arrow-repeat"></i>Aktualisiert {{ blog.last_updated|date:"d.m.Y" }}
+        </time>
+        {% endif %}
+        <span class="inline-flex items-center gap-2"><i class="bi bi-clock"></i>{{ blog_reading_time }} Min. Lesezeit</span>
+      </div>
+    </div>
+  </section>
+
+  <div class="mx-auto grid max-w-6xl gap-10 px-4 py-10 lg:grid-cols-[minmax(0,1fr)_320px] lg:py-14">
+    <article class="min-w-0 space-y-6 format format-sm sm:format-base lg:format-lg">
+      <header class="not-format">
+        <h1 class="text-4xl font-semibold leading-tight text-[#262C5D] md:text-5xl">{{ blog.title }}</h1>
+        {% if blog.description %}
+        <p class="mt-4 text-lg leading-8 text-gray-600">{{ blog.description }}</p>
+        {% endif %}
+      </header>
+      {% if blog_image_url %}
+      <figure class="not-format">
+        <img src="{{ blog_image_url }}" alt="{{ blog_image_alt }}" title="{{ blog_image_title }}"
+             class="max-h-[520px] w-full rounded-xl object-cover shadow-md" fetchpriority="high" decoding="async">
+        {% if blog_image_caption %}
+        <figcaption class="mt-2 text-sm leading-6 text-gray-500">{{ blog_image_caption }}</figcaption>
+        {% endif %}
+      </figure>
+      {% endif %}
+      {% if blog.active %}
+        {{ consent_safe_body|safe }}
+      {% else %}
+        <div class="rounded-lg border border-amber-200 bg-amber-50 p-4 text-amber-900">
+          Dieser Blog ist aktuell nicht aktiv und nur im CMS sichtbar.
+        </div>
+      {% endif %}
+    </article>
+
+    <aside class="lg:sticky lg:top-6 lg:self-start">
+      <div class="rounded-xl bg-gray-100 p-5 shadow-sm ring-1 ring-gray-200">
+        <h2 class="text-lg font-semibold text-[#262C5D]">Weitere Artikel</h2>
+        <div class="mt-4 space-y-5">
+          {% for related in related_blogs %}
+          <a href="{{ related.get_absolute_url }}" class="group block rounded-lg bg-white p-3 shadow-sm transition hover:shadow-md">
+            {% if related.title_image %}
+            <img class="mb-3 h-36 w-full rounded-md object-cover" src="{{ related.title_image.url }}" alt="{{ related.title_image_alt|default:related.title }}" title="{{ related.title_image_title|default:related.title }}" loading="lazy" decoding="async">
+            {% endif %}
+            <p class="text-sm font-semibold text-[#262C5D]">{{ related.last_updated|date:"d.m.Y" }}</p>
+            <h3 class="mt-1 text-base font-semibold leading-snug text-[#262C5D] group-hover:text-slate-900">{{ related.title }}</h3>
+            {% if related.description %}
+            <p class="mt-1 text-sm leading-6 text-gray-600">{{ related.description|truncatechars:110 }}</p>
+            {% endif %}
+          </a>
+          {% empty %}
+            <p class="text-sm leading-6 text-gray-600">Weitere Artikel erscheinen hier, sobald sie veröffentlicht sind.</p>
+          {% endfor %}
+        </div>
+      </div>
+    </aside>
+  </div>
+</main>
+{% endblock content %}
+
+{% block javascriptend %}
+{% compress js %}
+<script defer type="text/javascript" src="{% static 'js/cms/slick/slick.min.js' %}"></script>
+<script defer src="{% static 'js/prism/prism.js' %}" data-manual></script>
+<script>
+  document.addEventListener('DOMContentLoaded', function () {
+    var $ = window.jQuery;
+    if (!$) return;
+
+    $('.carousel').slick({
+      dots: true,
+      arrows: true,
+      infinite: true,
+      slidesToShow: 1,
+      slidesToScroll: 1,
+      autoplay: true,
+      autoplaySpeed: 3000
+    });
+
+    $('.next-button').on('click', function () {
+      var carousel = $(this).closest('.carousel-container').find('.carousel');
+      carousel.slick('slickNext');
+    });
+
+    $('.prev-button').on('click', function () {
+      var carousel = $(this).closest('.carousel-container').find('.carousel');
+      carousel.slick('slickPrev');
+    });
+
+    setTimeout(function () {
+      Prism.highlightAll();
+    }, 500);
+  });
+</script>
+{% endcompress js %}
+{% endblock javascriptend %}

@@ -1,0 +1,53 @@
+{% extends "base.html" %} {% load compress static %}
+
+{% block title %}{{ block.super }} | Impressum{% endblock title %}
+
+{% block content %}
+<div class="container pt-10 w-full mx-auto px-2 md:px-40">
+  <div>
+    <h1 class="text-3xl font-bold tracki text-center sm:text-5xl text-gray-900">Impressum</h1>
+  </div>
+
+  {% if impressum_blocks %}
+    {% for block in impressum_blocks %}
+      <div class="mt-6">
+        <h2 class="text-lg md:text-2xl">{{ block.title }}</h2>
+        <div class="prose max-w-none">{{ block.html|safe }}</div>
+      </div>
+    {% endfor %}
+  {% else %}
+    <div class="mt-8">
+      <h2 class="text-lg md:text-2xl">Herausgeber und Inhaber dieser Webseite</h2>
+      <p>{% if owner_data and owner_data.company_name %}{{ owner_data.company_name }}{% else %}Zahnarztpraxis Dr. Lorenz Holmer{% endif %}</p>
+    </div>
+    <div class="mt-6">
+      <h2 class="text-lg md:text-2xl">Anschrift</h2>
+      <p>{% if owner_data and owner_data.owner_name %}{{ owner_data.owner_name }}{% else %}Lorenz Holmer{% endif %}</p>
+      <p>{% if owner_data and owner_data.address %}{{ owner_data.address }}{% else %}Deggendorfer Str. 50A 94447 Plattling{% endif %}</p>
+    </div>
+    <div class="mt-6">
+      <h2 class="text-lg md:text-2xl">Kontakt</h2>
+      <p>Inhaber: {% if owner_data and owner_data.owner_name %}{{ owner_data.owner_name }}{% else %}Lorenz Holmer{% endif %}</p>
+      <p>Telefon: {% if owner_data and owner_data.tel_number %}{{ owner_data.tel_number }}{% else %}09931 2100{% endif %}</p>
+      <p>E-Mail: {% if owner_data and owner_data.email %}{{ owner_data.email }}{% else %}info@dr-holmer.de{% endif %}</p>
+    </div>
+    <div class="mt-6">
+      <h2 class="text-lg md:text-2xl">Berufsbezeichnung</h2>
+      <p>Zahnarzt</p>
+    </div>
+    <div class="mt-6">
+      <h2 class="text-lg md:text-2xl">Haftungshinweis</h2>
+      <p>Trotz sorgfältiger inhaltlicher Kontrolle übernehmen wir keine Haftung für die Inhalte externer Links. Für den Inhalt der verlinkten Seiten sind ausschließlich deren Betreiber verantwortlich. Diese Erklärung gilt für alle auf unserer Homepage angebrachten Links und für alle Inhalte der Seiten, zu denen Links führen.</p>
+    </div>
+    <div class="mt-6">
+      <h2 class="text-lg md:text-2xl">Copyright</h2>
+      <p>© Lorenz Holmer. Alle Rechte vorbehalten.</p>
+      <p>Text, Bilder, Grafiken, Sound, Animationen und Videos unterliegen dem Schutz des Urheberrechtes und anderer Schutzgesetze. Der Inhalt dieser Websites darf nicht zu kommerziellen Zwecken kopiert, verbreitet, verändert oder Dritten zugänglich gemacht werden.</p>
+    </div>
+    <div class="mt-6 mb-8">
+      <h2 class="text-lg md:text-2xl mb-30">Markenschutz</h2>
+      <p>Verwendete Kennzeichen sind Marken ihrer jeweiligen Eigentümer.</p>
+    </div>
+  {% endif %}
+</div>
+{% endblock content %}

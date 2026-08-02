@@ -1,0 +1,74 @@
+volumes:
+  holmer_production_postgres_data: {}
+  holmer_production_postgres_data_backups: {}
+  holmer_production_traefik: {}
+  holmer_production_django_media: {}
+
+services:
+  django: &django
+    build:
+      context: .
+      dockerfile: ./compose/production/django/Dockerfile
+
+    image: holmer_production_django
+    volumes:
+      - holmer_production_django_media:/app/yoolink/media
+    depends_on:
+      - postgres
+      - redis
+    env_file:
+      - ./.envs/.production/.django
+      - ./.envs/.production/.postgres
+    command: /start
+
+  postgres:
+    build:
+      context: .
+      dockerfile: ./compose/production/postgres/Dockerfile
+    image: holmer_production_postgres
+    volumes:
+      - holmer_production_postgres_data:/var/lib/postgresql/data
+      - holmer_production_postgres_data_backups:/backups
+    env_file:
+      - ./.envs/.production/.postgres
+
+  traefik:
+    build:
+      context: .
+      dockerfile: ./compose/production/traefik/Dockerfile
+    image: holmer_production_traefik
+    depends_on:
+      - django
+    volumes:
+      - holmer_production_traefik:/etc/traefik/acme
+    ports:
+      - "0.0.0.0:80:80"
+      - "0.0.0.0:443:443"
+      - "0.0.0.0:5555:5555"
+
+  redis:
+    image: redis:6
+
+  celeryworker:
+    <<: *django
+    image: holmer_production_celeryworker
+    command: /start-celeryworker
+
+  celerybeat:
+    <<: *django
+    image: holmer_production_celerybeat
+    command: /start-celerybeat
+
+  flower:
+    <<: *django
+    image: holmer_production_flower
+    command: /start-flower
+  nginx:
+    build:
+      context: .
+      dockerfile: ./compose/production/nginx/Dockerfile
+    image: holmer_production_nginx
+    depends_on:
+      - django
+    volumes:
+      - holmer_production_django_media:/usr/share/nginx/media:ro

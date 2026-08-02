@@ -1,0 +1,82 @@
+{% extends "base.html" %} {% load compress static %}
+
+{% block title %}{{ block.super }} | Cookies{% endblock title %}
+
+{% block content %}
+
+<div class="mt-28 mx-5 xl:mx-40 md:w-8/12 mb-36">
+  <div>
+    <h1 class="font-bold md:text-3xl">{{ textContent_hero.title|default:"Cookie-Einstellungen" }}</h1>
+    <p class="mt-5 text-sm md:text-base">
+      {{ textContent_hero.description|default:"Wir verwenden Cookies, um Ihnen ein optimales Webseiten-Erlebnis zu bieten. Dazu zählen technisch notwendige Cookies sowie optionale Dienste, die Sie selbst aktivieren oder deaktivieren können." }}
+    </p>
+  </div>
+
+  <form>
+    <div class="mt-8 space-y-8">
+      <div class="rounded-lg border border-gray-200 bg-white p-5 shadow-sm">
+        <div class="flex flex-wrap items-center gap-3">
+          <span class="text-sm">off</span>
+          <input class="h-5 w-10 cursor-pointer accent-[#40904d]" type="checkbox" role="switch" id="cookie"/>
+          <span class="text-sm">on</span>
+          <label for="cookie" class="font-semibold hover:cursor-pointer">
+            {{ textContent_necessary.title|default:"Cookies" }}
+          </label>
+        </div>
+        <p class="mt-3 text-sm text-gray-600">
+          {{ textContent_necessary.description|default:"Notwendige Cookies sind für den Betrieb der Website erforderlich. Optionale Dienste können Sie über die folgenden Schalter steuern." }}
+        </p>
+      </div>
+
+      <div>
+        <h3 class="mb-4 font-semibold text-gray-900">Auswahlmöglichkeiten</h3>
+        <ul class="space-y-5">
+          <li class="rounded-lg border border-gray-200 bg-white p-5 shadow-sm">
+            <div class="flex flex-wrap items-center gap-3">
+              <span class="text-sm">off</span>
+              <input class="h-5 w-10 cursor-pointer accent-[#40904d]" type="checkbox" role="switch" id="font"/>
+              <span class="text-sm">on</span>
+              <label for="font" class="font-semibold hover:cursor-pointer">
+                {{ textContent_analytics.title|default:"Google Fonts" }}
+              </label>
+            </div>
+            <p class="mt-3 text-sm text-gray-600">
+              {{ textContent_analytics.description|default:"Erlaubt das Laden optionaler Schrift- und Komfortfunktionen, falls sie auf der Website eingebunden sind." }}
+            </p>
+          </li>
+          <li class="rounded-lg border border-gray-200 bg-white p-5 shadow-sm">
+            <div class="flex flex-wrap items-center gap-3">
+              <span class="text-sm">off</span>
+              <input class="h-5 w-10 cursor-pointer accent-[#40904d]" type="checkbox" role="switch" id="map"/>
+              <span class="text-sm">on</span>
+              <label for="map" class="font-semibold hover:cursor-pointer">
+                {{ textContent_external.title|default:"Google Maps" }}
+              </label>
+            </div>
+            <p class="mt-3 text-sm text-gray-600">
+              {{ textContent_external.description|default:"Erlaubt das Laden externer Karten, Medien und Sicherheitsdienste. Ohne Zustimmung bleiben diese Dienste deaktiviert." }}
+            </p>
+          </li>
+        </ul>
+      </div>
+
+      {% if textContent_hinweis %}
+        <div class="rounded-lg bg-blue-50 p-5 text-sm text-blue-900">
+          {% if textContent_hinweis.title %}
+            <p class="font-semibold">{{ textContent_hinweis.title }}</p>
+          {% endif %}
+          {% if textContent_hinweis.description %}
+            <p class="mt-2">{{ textContent_hinweis.description }}</p>
+          {% endif %}
+        </div>
+      {% endif %}
+    </div>
+  </form>
+</div>
+{% endblock content %}
+
+{% block javascriptend %}
+  {% compress js inline %}
+    <script defer src="{% static 'js/cookies.js' %}"></script>
+  {% endcompress js %}
+{% endblock javascriptend %}

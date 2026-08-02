@@ -1,0 +1,440 @@
+{% extends "base.html" %} {% load compress static %} {% block title%}{{block.super}} - Dr. med. dent. Lorenz Holmer {% endblock title %} {% block content %} {% block css %} {% compress css inline %}
+
+{% endcompress css %} {% endblock css %}
+
+<!--Kontaktbuttons Beginn-->
+
+<!-- Hero Section -->
+<section id="owner" class="relative lg:min-h-[calc(70vh)] flex justify-center items-center">
+    <!-- Flex container -->
+    <div
+        class="container flex flex-col items-center max-w-3xl lg:max-w-5xl px-6 mx-auto mt-24 md:mt-10 space-y-0 md:space-y-0 md:flex-row md:space-x-12 space-x-0">
+
+        <!-- Right item with SVG heartbeat-tooth pattern background -->
+        <div class="flex flex-col mb-4 lg:mb-32 space-y-2 md:w-1/2 relative">
+            <!-- SVG heartbeat-tooth pattern -->
+            <svg class="absolute -top-16 -left-16 opacity-10 w-52 h-52" xmlns="http://www.w3.org/2000/svg"
+                viewBox="0 0 100 100">
+                <!-- Heartbeat pattern -->
+                <path d="M10 50 Q 15 40, 20 50 T 30 50 T 40 30 T 50 50 T 60 70 T 70 50 T 80 50 Q 85 40, 90 50"
+                    stroke="#262C5D" stroke-width="2" fill="none" />
+            </svg>
+            <h1
+                class="max-w-[300px] ml-10 md:ml-0 md:max-w-none text-[#262C5D] font-semibold text-3xl text-left md:text-4xl xl:text-5xl md:text-left">
+                {% if heroText %}{{heroText.header}}{% else %}Dr. med. dent. Lorenz Holmer{% endif %}
+            </h1>
+            <div>
+                <h2 class="text-xl ml-10 md:ml-0 ">{% if heroText %}{{heroText.title}}{% else %}Ihr Zahnarzt in Plattling{% endif %}
+                </h2>
+                <p class="text-xl ml-10 md:ml-0 font-semibold text-blue-950">{% if heroText %}{{heroText.description}}{% else %}Für
+                    Ihre Zähne{% endif %}</p>
+                <button
+                    class="mt-10 hidden md:inline-block text-sm bg-[#262C5D] text-white px-8 py-3 rounded-full shadow-md shadow-[#262C5D] transition-transform duration-300 ease-in-out hover:scale-105"
+                    onclick="window.location.href='{% if owner_data and owner_data.appointmentURL %}{{owner_data.appointmentURL}}{% else %}#{% endif %}';">
+                    {% if heroText %}{{heroText.buttonText}}{% else %}Termin vereinbaren{% endif %}
+                </button>
+            </div>
+        </div>
+
+        <!-- Image -->
+        <div class="md:w-1/2 mt-0 md:mt-0 max-w-80 md:max-w-full">
+            <img title="{% if heroImage %}{{heroImage.title}}{% endif %}"
+                src="{% if heroImage %}{{heroImage.file.url}}{% else %}{% static 'images/Portrait/LH Portrait.png' %}{% endif %}"
+                alt="{% if heroImage %}{{heroImage.title}}{% endif %}" class="rounded-xl">
+        </div>
+    </div>
+    <!-- Gradient Divider -->
+    <div class="absolute bottom-0 w-full h-20 bg-gradient-to-b from-transparent to-gray-50"></div>
+</section>
+
+<!-- Services Section -->
+<section id="Leistungen" class="py-8 md:py-20 scroll-my-14 md:scroll-my-2">
+    <div class="max-w-6xl mx-auto px-4 text-center">
+        <!-- Title and Subtitle -->
+        <h2 class="text-4xl font-semibold text-[#262C5D]">{% if serviceText %}{{serviceText.title}}{% else %}Unsere
+            Leistungen{% endif %}</h2>
+        <p class="mt-4 text-gray-600 text-lg">{% if serviceText %}{{serviceText.description}}{% else %}Der wichtigste
+            Pfeiler der modernen Zahnmedizin ist die Vorbeugung
+            von Krankheiten wie Karies oder Parodontitis. Hier sind einige unserer wesentlichen Leistungen, um
+            Ihre Zahngesundheit zu gewährleisten.{% endif %}</p>
+    </div>
+
+    <!-- Services List -->
+    <div class="mt-4 md:mt-20 max-w-6xl mx-auto px-4 space-y-24">
+
+        {% for service in services %}
+    <div class="flex flex-col-reverse md:flex-row-reverse items-center {% if forloop.counter|divisibleby:2 %}md:flex-row{% endif %}">
+        <!-- Bild-Bereich -->
+        <div class="flex-1 flex justify-center items-center {% if forloop.counter|divisibleby:2 %}md:mr-8{% else %}md:ml-8{% endif %}">
+            {% if service.prev_image and service.after_image %}
+                <img-comparison-slider class="shadow-lg rounded-xl shadow-slate-600">
+                    <img class="rounded-lg max-h-[24rem]" slot="first" src="{{ service.prev_image.file.url }}" alt="{{ service.prev_image.title }}" />
+                    <img class="rounded-lg max-h-[24rem]" slot="second" src="{{ service.after_image.file.url }}" alt="{{ service.after_image.title }}" />
+                </img-comparison-slider>
+            {% elif service.prev_image %}
+                <img src="{{ service.prev_image.file.url }}" alt="{{ service.prev_image.title }}" class="w-full rounded-lg shadow-lg shadow-slate-600">
+            {% else %}
+                <img src="{% static 'images/Bilder Shooting/LH_1.jpg' %}" alt="Leistungen Bild" class="w-full rounded-lg shadow-lg shadow-slate-600">
+            {% endif %}
+        </div>
+        <!-- Text-Bereich -->
+        <div class="flex-1 mb-5 md:mb-0 mt-8 md:mt-0 text-center">
+            <div class="flex flex-col items-center space-x-4 mb-6 justify-center">
+                <img src="{% if service.icon %}{{ service.icon.file.url }}{% else %}{% static 'images/Icons Behandlungen/Prophylaxe.png' %}{% endif %}" alt="{% if service.icon and service.icon.title %}{{ service.icon.title }}{% else %}Icon{% endif%}" class="w-14 h-14 mb-4">
+                <h3 class="text-3xl font-semibold text-[#262C5D]">
+                    {{ service.text.title|default:"Service Title" }}
+                </h3>
+            </div>
+            <p class="text-gray-600">
+                {{ service.text.description|default:"Default description text for the service." }}
+            </p>
+        </div>
+    </div>
+{% endfor %}
+
+
+    </div>
+</section>
+
+<!-- Unsere Praxis Section -->
+<section id="Galerie" class="py-14 bg-gray-100 relative">
+    <div class="absolute top-0 w-full h-20 bg-gradient-to-b from-white to-gray-100"></div>
+    <div class="max-w-6xl mx-auto px-4 text-center mt-8">
+        <!-- Title -->
+        <h2 class="text-4xl font-semibold text-[#262C5D]">{% if praxisTitle %}{{praxisTitle}}{% else %}Unsere Praxis{% endif %}</h2>
+        <p class="mt-4 text-gray-600 text-lg">{% if praxisBeschreibung %}{{praxisBeschreibung}}{% else %}Ein Einblick in
+            unsere modernen Praxisräume, in denen wir uns um Ihr Wohlbefinden kümmern.{% endif %}</p>
+    </div>
+
+    <!-- Slider main container -->
+    <div class="swiper container mx-auto max-w-5xl mt-8 px-2 md:px-0">
+        <!-- Additional required wrapper -->
+        <div class="swiper-wrapper">
+            {% if teamGalery %}
+            {% for img in teamGalery %}
+            <div class="swiper-slide rounded-lg"><img src="{{img.upload.url}}" alt="{{img.title}}"
+                    class="w-full max-h-[500px] object-cover rounded-lg shadow-md ">
+                <p class="pt-6 pb-8 text-center text-gray-600">{{img.title}}</p>
+            </div>
+            {% endfor %}
+            {% else %}
+            <!-- Slides -->
+            <div class="swiper-slide rounded-lg"><img src="{% static 'images/Behandlungszimmer/IMG_4766.jpg' %}"
+                    alt="Praxis Bild 1" class="w-full max-h-[500px] object-cover rounded-lg shadow-md ">
+                <p class="pt-6 pb-8 text-center text-gray-600">Das ist ein Bild aus unserer Praxis. Einer unserer tollen
+                    Behandlungszimmer!</p>
+            </div>
+            <div class="swiper-slide rounded-lg"><img src="{% static 'images/Bilder Shooting/IMG_5013.jpg' %}"
+                    alt="Praxis Bild 2" class="w-full max-h-[500px] object-cover rounded-lg shadow-md">
+                <p class="pt-6 pb-8 text-center text-gray-600">Ein Bild, welches die aktive Behandlung an einem
+                    Patienten zeigt.</p>
+            </div>
+            <div class="swiper-slide rounded-lg"><img src="{% static 'images/Bilder Shooting/IMG_4947.jpg' %}"
+                    alt="Praxis Bild 3" class="w-full max-h-[500px] object-cover rounded-lg shadow-md">
+                <p class="pt-6 pb-8 text-center text-gray-600">Unsere Artzhelferinnen empfangen Sie gleich am Eingang.
+                </p>
+            </div>
+            {% endif %}
+        </div>
+        <!-- If we need pagination -->
+        <div class="swiper-pagination"></div>
+
+        <!-- If we need navigation buttons -->
+        <!--<div class="swiper-button-prev hidden"></div>
+      <div class="swiper-button-next hidden"></div>-->
+
+        <!-- If we need scrollbar -->
+        <!--<div class="swiper-scrollbar"></div>-->
+    </div>
+    <div class="absolute bottom-0 w-full h-20 bg-gradient-to-b from-gray-100 to-white"></div>
+</section>
+
+
+{% if teamText and teamText.title %}
+<section id="Team" class="md:py-14 relative scroll-my-8 md:-scroll-my-32">
+    <div class="max-w-6xl mx-auto px-4 text-center pt-14 pb-20 md:my-28">
+        <!-- Title -->
+        <h2 class="text-4xl font-semibold text-[#262C5D]">{% if teamText.title %}{{teamText.title}}{% endif %}</h2>
+        <p class="mt-4 text-gray-600 text-lg">{% if teamText.description %}{{teamText.description}}{% endif %}</p>
+
+        {% if teamMembers %}
+        <!-- Dentist Cards -->
+        <div class="mt-10 flex flex-wrap justify-center gap-8">
+            {% for member in teamMembers %}
+            <div class="flex w-full flex-col items-center justify-center text-center md:w-5/12 lg:w-1/4">
+                <img src="{{ member.image }}" alt="{{ member.full_name }}"
+                    class="mx-auto rounded-tl-2xl rounded-br-2xl h-80">
+                <h3 class="mt-4 text-xl font-semibold text-gray-800">{{ member.full_name }}</h3>
+                <p class="text-[#262C5D]">{{ member.position }}</p>
+                <p class="text-gray-500 mt-2">{% if member.years_with_team != 0 %}Dabei seit {{member.years_with_team}} Jahren{% endif %}</p>
+            </div>
+            {% endfor %}
+        </div>
+        {% endif %}
+    </div>
+    <div class="absolute bottom-0 w-full h-20 bg-gradient-to-b from-white to-gray-100"></div>
+</section>
+{% endif %}
+
+{% if latestBlogs %}
+<section id="Blog" class="bg-gray-100 py-14 md:py-20 scroll-my-14">
+    <div class="max-w-6xl mx-auto px-4">
+        <div class="flex flex-col gap-5 md:flex-row md:items-end md:justify-between">
+            <div class="max-w-3xl">
+                <h2 class="text-4xl font-semibold text-[#262C5D]">{% if homeBlogText and homeBlogText.title %}{{ homeBlogText.title }}{% else %}Aktuelles aus der Zahnarztpraxis{% endif %}</h2>
+                <p class="mt-4 text-gray-600 text-lg">{% if homeBlogText and homeBlogText.description %}{{ homeBlogText.description }}{% else %}Tipps zur Zahngesundheit, Einblicke in moderne Behandlungen und Neuigkeiten aus unserer Praxis.{% endif %}</p>
+            </div>
+            <a href="{% url 'blog:blog' %}" class="inline-flex items-center justify-center rounded-lg bg-[#262C5D] px-6 py-3 font-semibold text-white shadow-md shadow-[#262C5D] transition hover:bg-slate-900">
+                {% if homeBlogText and homeBlogText.buttonText %}{{ homeBlogText.buttonText }}{% else %}Alle Artikel ansehen{% endif %}
+            </a>
+        </div>
+
+        <div class="mt-10 grid grid-cols-1 gap-6 md:grid-cols-3">
+            {% for blog in latestBlogs %}
+            <article class="flex h-full flex-col overflow-hidden rounded-xl bg-white shadow-md transition hover:-translate-y-1 hover:shadow-lg">
+                <a href="{{ blog.get_absolute_url }}" class="block">
+                    {% if blog.title_image %}
+                    <img src="{{ blog.title_image.url }}" alt="{{ blog.title_image_alt|default:blog.title }}" title="{{ blog.title_image_title|default:blog.title }}" class="h-52 w-full object-cover" loading="lazy" decoding="async">
+                    {% else %}
+                    <div class="flex h-52 w-full items-center justify-center bg-white text-[#262C5D]">
+                        <i class="bi bi-journal-richtext text-4xl"></i>
+                    </div>
+                    {% endif %}
+                </a>
+                <div class="flex flex-1 flex-col p-5">
+                    <p class="text-sm font-semibold text-[#262C5D]">{{ blog.last_updated|date:"d.m.Y" }}</p>
+                    <h3 class="mt-2 text-xl font-semibold leading-snug text-[#262C5D]">
+                        <a href="{{ blog.get_absolute_url }}" class="hover:text-slate-900">{{ blog.title }}</a>
+                    </h3>
+                    {% if blog.description %}
+                    <p class="mt-3 flex-1 text-gray-600">{{ blog.description|truncatechars:130 }}</p>
+                    {% endif %}
+                    <a href="{{ blog.get_absolute_url }}" class="mt-5 inline-flex items-center font-semibold text-[#262C5D] hover:text-slate-900">
+                        Artikel lesen <i class="bi bi-arrow-right ml-2"></i>
+                    </a>
+                </div>
+            </article>
+            {% endfor %}
+        </div>
+    </div>
+</section>
+{% endif %}
+
+
+<section id="Kontakt" class="bg-gray-100 relative scroll-my-14">
+    <div class="max-w-7xl mx-auto pt-8 pb-24 px-8">
+        <!-- Title and Appointment Button -->
+        <div class="text-center">
+            <h2 class="text-4xl font-semibold text-[#262C5D]">{% if contactText %}{{contactText.title}}{% else %}Unsere Kontakte{% endif %}</h2>
+            <p class="mt-4 text-gray-600 mb-6 text-lg">
+                {% if contactText %}{{contactText.description}}{% else %}Wir stehen Ihnen jederzeit zur Verfügung, um
+                Ihre Fragen zu beantworten und Termine zu vereinbaren.{% endif %}
+            </p>
+        </div>
+
+        <!-- Google Map with contact details -->
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-8 mt-12 z-50">
+            <!-- Google Map -->
+
+            <div class="relative h-[270px] md:h-[498px]">
+                <div id="map" class="h-full hidden"{% if google_maps_embed_api_key %} data-map-src="https://www.google.com/maps/embed/v1/place?key={{ google_maps_embed_api_key|urlencode }}&amp;zoom=14&amp;maptype=roadmap&amp;q=Dr.%20med.%20dent.%20Lorenz%20Holmer"{% endif %}>
+                </div>
+                
+                <div id="covermap" class="w-full h-[270px] md:h-[498px] rounded-lg shadow-lg hidden">
+                    <img class="h-full w-full object-cover brightness-75" src="{% static 'images/designImg/BlackandWhiteMap.png' %}" alt="Schwarzweiskarte" />
+                    <div class="z-25 absolute w-full py-2.5 top-2.5 md:top-1/4 bottom-0.5 inset-x-0 text-white text-sm text-center leading-4 lg:text-lg md:text-base">
+                    Inhalte von Google werden aufgrund deiner aktuellen Cookie-Einstellungen nicht angezeigt. Mehr dazu erfährst du in unserer
+                    <a href="{% url 'datenschutz' %}" class="hover:bg-slate-500 hover:text-white hover:rounded-sm transition ease-linear duration-300 text-[#262C5D]">
+                        Datenschutzerklärung
+                    </a>. Du kannst deine Zustimmung jederzeit widerrufen. Gehe dazu einfach in deine eigenen
+                    <a href="{% url 'cookies' %}" class="hover:bg-slate-500 hover:text-white hover:rounded-sm transition ease-linear duration-300 text-[#262C5D]">Cookie-Einstellungen</a>.
+                    </div>
+                </div>
+            </div>
+            <!-- Contact Information -->
+            <div class="flex flex-col">
+                <!-- Work Time, Address, and Phone in one row -->
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <!-- Work Time -->
+                    <div>
+                        <h3 class="text-lg font-semibold mb-2">Öffnungszeiten:</h3>
+                        <ul class="text-gray-600">
+                            <li class="flex">
+                                <span class="mr-1">Montag:</span>
+                                <span>
+                                    {% if opening_mon and opening_mon.is_open %}
+                                        {% for period in opening_mon.calculate_opening_periods %}
+                                            {{ period.0 }}-{{ period.1 }}{% if not forloop.last %}, {% endif %}
+                                        {% endfor %}
+                                    {% else %}
+                                        Geschlossen
+                                    {% endif %}
+                                </span>
+                            </li>
+                            <li class="flex">
+                                <span class="mr-1">Dienstag:</span>
+                                <span>
+                                    {% if opening_tue and opening_tue.is_open %}
+                                        {% for period in opening_tue.calculate_opening_periods %}
+                                            {{ period.0 }}-{{ period.1 }}{% if not forloop.last %}, {% endif %}
+                                        {% endfor %}
+                                    {% else %}
+                                        Geschlossen
+                                    {% endif %}
+                                </span>
+                            </li>
+                            <li class="flex">
+                                <span class="mr-1">Mittwoch:</span>
+                                <span>
+                                    {% if opening_wed and opening_wed.is_open %}
+                                        {% for period in opening_wed.calculate_opening_periods %}
+                                            {{ period.0 }}-{{ period.1 }}{% if not forloop.last %}, {% endif %}
+                                        {% endfor %}
+                                    {% else %}
+                                        Geschlossen
+                                    {% endif %}
+                                </span>
+                            </li>
+                            <li class="flex">
+                                <span class="mr-1">Donnerstag:</span>
+                                <span>
+                                    {% if opening_thu and opening_thu.is_open %}
+                                        {% for period in opening_thu.calculate_opening_periods %}
+                                            {{ period.0 }}-{{ period.1 }}{% if not forloop.last %}, {% endif %}
+                                        {% endfor %}
+                                    {% else %}
+                                        Geschlossen
+                                    {% endif %}
+                                </span>
+                            </li>
+                            <li class="flex">
+                                <span class="mr-1">Freitag:</span>
+                                <span>
+                                    {% if opening_fri and opening_fri.is_open %}
+                                        {% for period in opening_fri.calculate_opening_periods %}
+                                            {{ period.0 }}-{{ period.1 }}{% if not forloop.last %}, {% endif %}
+                                        {% endfor %}
+                                    {% else %}
+                                        Geschlossen
+                                    {% endif %}
+                                </span>
+                            </li>
+                            <li class="flex">
+                                <span class="mr-1">Samstag:</span>
+                                <span>
+                                    {% if opening_sat and opening_sat.is_open %}
+                                        {% for period in opening_sat.calculate_opening_periods %}
+                                            {{ period.0 }}-{{ period.1 }}{% if not forloop.last %}, {% endif %}
+                                        {% endfor %}
+                                    {% else %}
+                                        Geschlossen
+                                    {% endif %}
+                                </span>
+                            </li>
+                            <li class="flex">
+                                <span class="mr-1">Sonntag:</span>
+                                <span>
+                                    {% if opening_sun and opening_sun.is_open %}
+                                        {% for period in opening_sun.calculate_opening_periods %}
+                                            {{ period.0 }}-{{ period.1 }}{% if not forloop.last %}, {% endif %}
+                                        {% endfor %}
+                                    {% else %}
+                                        Geschlossen
+                                    {% endif %}
+                                </span>
+                            </li>
+                        </ul>
+                    </div>                    
+
+                    <!-- Address and Phone stacked under each other -->
+                    <div>
+                        <!-- Address -->
+                        <h3 class="text-lg font-semibold mb-2">Adresse:</h3>
+                        <p class="text-gray-600">{% if owner_data and owner_data.address %}{{owner_data.address}}{% else %}Deggendorfer Str. 50A, 94447 Plattling{%endif%}</p>
+
+                        <!-- Phone -->
+                        <h3 class="text-lg font-semibold mt-4 mb-2">Telefon:</h3>
+                        <p class="text-gray-600 mb-6">{% if owner_data and owner_data.tel_number %}{{owner_data.tel_number}}{% else %}+123 6897 8974{% endif %}</p>
+
+                        <a href="{% if owner_data and owner_data.emergencyURL %}{{owner_data.emergencyURL}}{% else %}#{% endif %}"
+                            class="bg-[#262C5D] text-white px-6 py-3 rounded-lg shadow hover:bg-slate-900">
+                            Notdienst
+                        </a>
+                    </div>
+                </div>
+
+                <!-- Contact Form -->
+                <form id="emailForm" action="javascript:void(0);" class="space-y-4 mt-8">
+                    {% csrf_token%}
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                        <input id="name" name="name" type="text" placeholder="Name"
+                            class="w-full p-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-[#262C5D]">
+                        <input id="email" name="email" type="email" placeholder="E-Mail"
+                            class="w-full p-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-[#262C5D]">
+                    </div>
+                    <input id="title" name="title" value="Kontaktanfrage" hidden>
+                    <textarea id="message" name="message" placeholder="Nachricht" rows="4"
+                        class="w-full p-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-[#262C5D]"></textarea>
+                    <div class="flex justify-between md:justify-end md:space-x-6">
+                        <!-- "Termin vereinbaren" - Visible only on medium and larger screens -->
+                        <a href="{% if owner_data and owner_data.appointmentURL %}{{owner_data.appointmentURL}}{% else %}#{% endif %}"
+                            class="hidden md:inline-block bg-[#262C5D] text-white px-6 py-3 rounded-lg shadow hover:bg-slate-900">
+                            Termin vereinbaren
+                        </a>
+
+                        <!-- "Termin" - Visible only on small screens -->
+                        <a href="{% if owner_data and owner_data.appointmentURL %}{{owner_data.appointmentURL}}{% else %}#{% endif %}"
+                              class=" block md:hidden bg-[#262C5D] text-white px-6 py-3 rounded-lg shadow hover:bg-slate-900">
+                            Termin
+                        </a>
+                        {{ form.captcha }}
+                        <!-- "Senden" - Always visible -->
+                        <button id="bSendMail" type="submit" class="bg-[#262C5D] text-white px-6 py-3 rounded-lg shadow hover:bg-slate-900">
+                            Senden
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+    <div class="absolute bottom-0 w-full h-20 bg-gradient-to-b from-gray-100 to-white"></div>
+</section>
+
+<section itemscope itemtype="https://schema.org/FAQPage" class="py-5 md:py-10">
+    <div class="bg-white">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <h2 class="text-4xl font-semibold text-[#262C5D]">{% if faqText %}{{faqText.title}}{% else %}FAQs{% endif %}
+            </h2>
+            <p class="text-gray-600 mb-8 mt-4 text-lg">
+                {% if faqText %}{{faqText.description}}{% else %}Quisque sodales nibh odio, vel accumsan odio luctus
+                vel. Nam in lorem ac sem porttitor placerat
+                at interdum leo.{% endif %}
+            </p>
+
+            {% for faq in FAQ %}
+            <!-- FAQ Item 1 -->
+            <div itemscope itemprop="mainEntity" itemtype="https://schema.org/Question"
+                class="border-b border-gray-200">
+                <button
+                    class="faq-question w-full text-left py-4 flex items-center justify-between text-gray-700 focus:outline-none">
+                    <h3 itemprop="name" class="font-semibold">{{ faq.question }}</h3>
+                    <span class="faq-toggle text-gray-500">+</span>
+                </button>
+                <div itemscope itemprop="acceptedAnswer" itemtype="https://schema.org/Answer"
+                    class="faq-answer py-2 text-gray-500">
+                    <p itemprop="text">
+                        {{ faq.answer }}
+                    </p>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</section>
+
+
+{% endblock content %} 
+
+{% block javascriptend %} {% compress js inline %}
+<script defer src="{% static 'js/home.js' %}"></script>
+{% endcompress js %} {% endblock javascriptend %}

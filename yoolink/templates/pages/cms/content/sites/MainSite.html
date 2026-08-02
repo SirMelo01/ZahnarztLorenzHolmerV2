@@ -1,0 +1,427 @@
+{% extends "cmsbase.html" %}
+{% load compress static %}
+{% block title %}{{ block.super }} | CMS - Hauptseite{% endblock %}
+
+{% block javascript %}
+<link rel="stylesheet" type="text/css" href="{% static 'css/cms/slick/slick-carousel.css' %}" />
+<link rel="stylesheet" type="text/css" href="{% static 'css/cms/slick/slick-theme.css' %}" />
+<style>
+    #holmerMainPageEditor .carousel .slick-prev,
+    #holmerMainPageEditor .carousel .slick-next {
+        z-index: 20;
+        width: 34px;
+        height: 34px;
+    }
+
+    #holmerMainPageEditor .carousel .slick-prev {
+        left: 8px;
+    }
+
+    #holmerMainPageEditor .carousel .slick-next {
+        right: 8px;
+    }
+
+    #holmerMainPageEditor .carousel .slick-prev:before,
+    #holmerMainPageEditor .carousel .slick-next:before {
+        color: #2563eb;
+        font-size: 26px;
+        opacity: 1;
+    }
+
+    #holmerMainPageEditor .service-editor-row {
+        display: grid;
+        gap: 1.25rem;
+    }
+
+    @media (min-width: 1024px) {
+        #holmerMainPageEditor .service-editor-row {
+            grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+            align-items: stretch;
+        }
+
+        #holmerMainPageEditor .service-editor-row:not(.service-editor-row--reverse) .service-editor-text {
+            order: 1;
+        }
+
+        #holmerMainPageEditor .service-editor-row:not(.service-editor-row--reverse) .service-editor-media {
+            order: 2;
+        }
+
+        #holmerMainPageEditor .service-editor-row--reverse .service-editor-text {
+            order: 2;
+        }
+
+        #holmerMainPageEditor .service-editor-row--reverse .service-editor-media {
+            order: 1;
+        }
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+{% include "pages/cms/components/ImageSelectModal.html" %}
+{% include "pages/cms/components/GalerySelectModal.html" %}
+
+<div id="holmerMainPageEditor" class="container mx-auto max-w-7xl px-3 py-6 lg:px-0">
+    <div class="sticky top-[4.25rem] z-30 mb-8 rounded-lg border border-gray-200 bg-white/95 px-5 py-4 shadow-sm backdrop-blur">
+        <div class="flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between">
+            <div class="min-w-0">
+                <h1 class="text-2xl font-semibold text-gray-900">
+                    <a href="{% url 'cms:sites' %}" class="js-guard-nav text-blue-500 hover:text-blue-700">Seiten</a>
+                    <span class="mx-2 text-gray-400">/</span>
+                    <span>Hauptseite</span>
+                </h1>
+                <p class="mt-1 text-sm text-gray-500">Startseite für Zahnarzt Dr. Lorenz Holmer: Hero, Leistungen, Praxis, Team, Blog, Kontakt, FAQ und Footer.</p>
+            </div>
+            <div class="flex flex-shrink-0 flex-wrap items-center gap-3">
+                {% csrf_token %}
+                <span id="dirtyBadge" data-unsaved-badge class="hidden items-center gap-1.5 rounded-full bg-amber-100 px-3 py-1.5 text-xs font-semibold text-amber-800 ring-1 ring-amber-200">
+                    <span class="inline-block h-1.5 w-1.5 animate-pulse rounded-full bg-amber-500"></span> Nicht gespeichert
+                </span>
+                <a class="block w-full cursor-pointer rounded-lg bg-green-500 px-5 py-3 text-center font-bold text-white transition hover:bg-green-700 sm:w-auto sm:py-2"
+                    id="saveTextData" name="main">
+                    <i class="bi bi-save2 mr-1"></i> Speichern
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <div class="space-y-6 pb-24">
+        <section class="rounded-lg border border-gray-200 bg-white p-5 shadow-sm sm:p-6">
+            <div class="mb-5 flex items-center gap-3">
+                <span class="grid h-9 w-9 place-items-center rounded-full bg-blue-100 text-blue-700"><i class="bi bi-stars"></i></span>
+                <div>
+                    <h2 class="text-lg font-bold text-gray-900">Hero</h2>
+                    <p class="text-sm text-gray-500">Erster Bereich mit Praxisname, Claim, Button und Portrait.</p>
+                </div>
+            </div>
+
+            <div class="grid gap-8 lg:grid-cols-2">
+                <div class="text-content flex flex-col gap-5" key="main_hero">
+                    <div>
+                        <label class="mb-1 block text-sm font-medium text-gray-600">Name / Header</label>
+                        <input inputType="header" type="text" class="w-full rounded-lg border-2 border-gray-200 bg-gray-50 px-4 py-2 text-base font-semibold text-gray-900 focus:border-blue-500 focus:bg-white focus:outline-none"
+                            value="{{ hero_text.header|default:'Dr. med. dent. Lorenz Holmer' }}">
+                    </div>
+                    <div>
+                        <label class="mb-1 block text-sm font-medium text-gray-600">Unterzeile</label>
+                        <input inputType="title" type="text" class="w-full rounded-lg border-2 border-gray-200 bg-gray-50 px-4 py-2 text-base font-semibold text-gray-900 focus:border-blue-500 focus:bg-white focus:outline-none"
+                            value="{{ hero_text.title|default:'Ihr Zahnarzt in Plattling' }}">
+                    </div>
+                    <div>
+                        <label class="mb-1 block text-sm font-medium text-gray-600">Beschreibung</label>
+                        <textarea inputType="description" rows="4" class="w-full rounded-lg border-2 border-gray-200 bg-gray-50 px-4 py-2 text-base leading-relaxed text-gray-800 focus:border-blue-500 focus:bg-white focus:outline-none">{{ hero_text.description|default:'Für Ihre Zähne' }}</textarea>
+                    </div>
+                    <div>
+                        <label class="mb-1 block text-sm font-medium text-gray-600">Button-Text</label>
+                        <input inputType="buttonText" type="text" class="w-full rounded-lg border-2 border-gray-200 bg-gray-50 px-4 py-2 text-base font-medium text-gray-900 focus:border-blue-500 focus:bg-white focus:outline-none"
+                            value="{{ hero_text.buttonText|default:'Termin vereinbaren' }}">
+                    </div>
+                </div>
+
+                <div>
+                    <p class="mb-2 text-xs font-semibold uppercase tracking-wider text-orange-600"><i class="bi bi-image mr-1"></i>Hero-Bild</p>
+                    <div class="relative overflow-hidden rounded-lg border border-gray-200 bg-gray-50">
+                        <span class="edit-img not-sortable absolute left-2 top-2 z-10 inline-block rounded-full bg-orange-500 px-2 py-1 text-sm font-semibold text-white hover:cursor-pointer" title="Bild bearbeiten">
+                            <i class="bi bi-pencil-square"></i>
+                        </span>
+                        <img src="{% if hero_image %}{{ hero_image.file.url }}{% else %}{% static 'images/Portrait/LH Portrait.png' %}{% endif %}"
+                            imgId="{% if hero_image %}{{ hero_image.id }}{% else %}-1{% endif %}"
+                            key="main_hero"
+                            alt="{% if hero_image %}{{ hero_image.title }}{% else %}Dr. Lorenz Holmer{% endif %}"
+                            class="content-image h-96 w-full object-cover">
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="rounded-lg border border-gray-200 bg-white p-5 shadow-sm sm:p-6">
+            <div class="mb-5 flex items-center gap-3">
+                <span class="grid h-9 w-9 place-items-center rounded-full bg-blue-100 text-blue-700"><i class="bi bi-heart-pulse"></i></span>
+                <div>
+                    <h2 class="text-lg font-bold text-gray-900">Leistungen</h2>
+                    <p class="text-sm text-gray-500">Überschrift und die sieben Behandlungsblöcke der Startseite.</p>
+                </div>
+            </div>
+
+            <div class="text-content mb-6 flex flex-col gap-5" key="main_service">
+                <div>
+                    <label class="mb-1 block text-sm font-medium text-gray-600">Überschrift</label>
+                    <input inputType="title" type="text" class="w-full rounded-lg border-2 border-gray-200 bg-gray-50 px-4 py-2 text-base font-semibold text-gray-900 focus:border-blue-500 focus:bg-white focus:outline-none"
+                        value="{{ service_text.title|default:'Unsere Leistungen' }}">
+                </div>
+                <div>
+                    <label class="mb-1 block text-sm font-medium text-gray-600">Beschreibung</label>
+                    <textarea inputType="description" rows="3" class="w-full rounded-lg border-2 border-gray-200 bg-gray-50 px-4 py-2 text-base leading-relaxed text-gray-800 focus:border-blue-500 focus:bg-white focus:outline-none">{{ service_text.description|default:'Der wichtigste Pfeiler der modernen Zahnmedizin ist die Vorbeugung von Krankheiten wie Karies oder Parodontitis.' }}</textarea>
+                </div>
+            </div>
+
+            <div class="space-y-5">
+                {% for service in services %}
+                <div class="rounded-lg border border-gray-200 bg-gray-50 p-4 sm:p-5">
+                    <h3 class="mb-4 text-base font-bold text-gray-900">Leistung {{ service.index }}</h3>
+                    <div class="service-editor-row {% if forloop.counter|divisibleby:2 %}service-editor-row--reverse{% endif %}">
+                        <div class="service-editor-text text-content rounded-lg border border-gray-200 bg-white p-4" key="main_service_{{ service.index }}">
+                            <div class="mb-4 flex flex-col gap-4 sm:flex-row sm:items-end">
+                                <div class="w-24 shrink-0">
+                                    <p class="mb-1 text-xs font-semibold uppercase tracking-wider text-orange-600">Icon</p>
+                                    <div class="relative aspect-square overflow-hidden rounded-lg border border-gray-200 bg-white">
+                                        <span class="edit-img not-sortable absolute left-1 top-1 z-10 inline-block rounded-full bg-orange-500 px-2 py-1 text-xs font-semibold text-white hover:cursor-pointer"><i class="bi bi-pencil-square"></i></span>
+                                        <img src="{% if service.icon %}{{ service.icon.file.url }}{% else %}{% static 'images/Icons Behandlungen/Prophylaxe.png' %}{% endif %}"
+                                            imgId="{% if service.icon %}{{ service.icon.id }}{% else %}-1{% endif %}"
+                                            key="main_service_{{ service.index }}_icon"
+                                            alt="{% if service.icon %}{{ service.icon.title }}{% else %}Icon{% endif %}"
+                                            class="content-image h-full w-full object-contain p-4">
+                                    </div>
+                                </div>
+                                <div class="min-w-0 flex-1">
+                                    <label class="mb-1 block text-sm font-medium text-gray-600">Titel</label>
+                                    <input inputType="title" type="text" class="w-full rounded-lg border-2 border-gray-200 bg-white px-4 py-2 text-base font-semibold text-gray-900 focus:border-blue-500 focus:outline-none"
+                                        value="{{ service.text.title|default:'Behandlung' }}">
+                                </div>
+                            </div>
+                            <div>
+                                <label class="mb-1 block text-sm font-medium text-gray-600">Beschreibung</label>
+                                <textarea inputType="description" rows="6" class="w-full rounded-lg border-2 border-gray-200 bg-white px-4 py-2 text-sm leading-relaxed text-gray-800 focus:border-blue-500 focus:outline-none">{{ service.text.description|default:'Beschreibung der Behandlung.' }}</textarea>
+                            </div>
+                        </div>
+
+                        <div class="service-editor-media rounded-lg border border-gray-200 bg-white p-4">
+                            <div class="grid gap-4 sm:grid-cols-2">
+                            <div class="self-stretch">
+                                <p class="mb-1 text-xs font-semibold uppercase tracking-wider text-orange-600">Vorher</p>
+                                <div class="relative aspect-[4/3] min-h-[12rem] overflow-hidden rounded-lg border border-gray-200 bg-white">
+                                    <span class="edit-img not-sortable absolute left-1 top-1 z-10 inline-block rounded-full bg-orange-500 px-2 py-1 text-xs font-semibold text-white hover:cursor-pointer"><i class="bi bi-pencil-square"></i></span>
+                                    <img src="{% if service.prev_image %}{{ service.prev_image.file.url }}{% else %}{% static 'images/Bilder Shooting/LH_1.jpg' %}{% endif %}"
+                                        imgId="{% if service.prev_image %}{{ service.prev_image.id }}{% else %}-1{% endif %}"
+                                        key="main_service_{{ service.index }}_prev"
+                                        alt="{% if service.prev_image %}{{ service.prev_image.title }}{% else %}Leistung Bild{% endif %}"
+                                        class="content-image h-full w-full object-cover">
+                                </div>
+                            </div>
+                            <div class="self-stretch">
+                                <p class="mb-1 text-xs font-semibold uppercase tracking-wider text-orange-600">Nachher</p>
+                                <div class="relative aspect-[4/3] min-h-[12rem] overflow-hidden rounded-lg border border-gray-200 bg-white">
+                                    <span class="edit-img not-sortable absolute left-1 top-1 z-10 inline-block rounded-full bg-orange-500 px-2 py-1 text-xs font-semibold text-white hover:cursor-pointer"><i class="bi bi-pencil-square"></i></span>
+                                    <img src="{% if service.after_image %}{{ service.after_image.file.url }}{% else %}{% static 'images/Bilder Shooting/LH_2.jpg' %}{% endif %}"
+                                        imgId="{% if service.after_image %}{{ service.after_image.id }}{% else %}-1{% endif %}"
+                                        key="main_service_{{ service.index }}_after"
+                                        alt="{% if service.after_image %}{{ service.after_image.title }}{% else %}Leistung Bild{% endif %}"
+                                        class="content-image h-full w-full object-cover">
+                                </div>
+                            </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+        </section>
+
+        <section class="rounded-lg border border-gray-200 bg-white p-5 shadow-sm sm:p-6">
+            <div class="mb-5 flex items-center gap-3">
+                <span class="grid h-9 w-9 place-items-center rounded-full bg-blue-100 text-blue-700"><i class="bi bi-images"></i></span>
+                <div>
+                    <h2 class="text-lg font-bold text-gray-900">Praxisgalerie</h2>
+                    <p class="text-sm text-gray-500">Titel, Beschreibung und Galerieauswahl für den Praxisbereich.</p>
+                </div>
+            </div>
+
+            <div class="grid gap-8 lg:grid-cols-2">
+                <div class="text-content flex flex-col gap-5" key="main_praxis">
+                    <div>
+                        <label class="mb-1 block text-sm font-medium text-gray-600">Überschrift</label>
+                        <input inputType="title" type="text" class="w-full rounded-lg border-2 border-gray-200 bg-gray-50 px-4 py-2 text-base font-semibold text-gray-900 focus:border-blue-500 focus:bg-white focus:outline-none"
+                            value="{{ praxis_text.title|default:'Unsere Praxis' }}">
+                    </div>
+                    <div>
+                        <label class="mb-1 block text-sm font-medium text-gray-600">Beschreibung</label>
+                        <textarea inputType="description" rows="5" class="w-full rounded-lg border-2 border-gray-200 bg-gray-50 px-4 py-2 text-base leading-relaxed text-gray-800 focus:border-blue-500 focus:bg-white focus:outline-none">{{ praxis_text.description|default:'Ein Einblick in unsere modernen Praxisräume.' }}</textarea>
+                    </div>
+                </div>
+
+                <div>
+                    <p class="mb-2 text-xs font-semibold uppercase tracking-wider text-orange-600"><i class="bi bi-images mr-1"></i>Ausgewählte Galerie</p>
+                    <div class="galery-container relative w-full" galery-id="{% if praxis_galerie %}{{ praxis_galerie.id }}{% else %}-1{% endif %}" key="main_praxis">
+                        <span class="edit-galery not-sortable absolute left-2 top-2 z-40 inline-block rounded-full bg-orange-500 px-2 py-1 text-sm font-semibold text-white hover:cursor-pointer" title="Galerie bearbeiten">
+                            <i class="bi bi-pencil-square"></i>
+                        </span>
+                        <div class="carousel rounded-lg">
+                            {% if praxis_galerie_images %}
+                                {% for img in praxis_galerie_images %}
+                                <div><img src="{{ img.upload.url }}" alt="{{ img.title }}" class="h-80 w-full rounded-xl object-cover" /></div>
+                                {% endfor %}
+                            {% else %}
+                                <div><img src="{% static 'images/Behandlungszimmer/IMG_4766.jpg' %}" alt="Praxis" class="h-80 w-full rounded-xl object-cover" /></div>
+                                <div><img src="{% static 'images/Bilder Shooting/IMG_5013.jpg' %}" alt="Praxis" class="h-80 w-full rounded-xl object-cover" /></div>
+                            {% endif %}
+                        </div>
+                    </div>
+                    {% url 'cms:galerien' as galery_manage_url %}
+                    <a href="{{ galery_manage_url }}" target="_blank" rel="noopener" class="mt-3 inline-flex items-center gap-2 rounded-lg border border-gray-200 bg-gray-50 px-4 py-2 text-sm font-semibold text-gray-700 transition hover:bg-gray-100">
+                        <i class="bi bi-box-arrow-up-right"></i> Galerien verwalten
+                    </a>
+                </div>
+            </div>
+        </section>
+
+        <section class="rounded-lg border border-gray-200 bg-white p-5 shadow-sm sm:p-6">
+            <div class="mb-5 flex items-center gap-3">
+                <span class="grid h-9 w-9 place-items-center rounded-full bg-blue-100 text-blue-700"><i class="bi bi-person-badge"></i></span>
+                <div>
+                    <h2 class="text-lg font-bold text-gray-900">Team</h2>
+                    <p class="text-sm text-gray-500">Einleitungstext der Teamsektion; Personen werden im Team-Bereich verwaltet.</p>
+                </div>
+            </div>
+
+            <div class="grid gap-8 lg:grid-cols-2">
+                <div class="text-content flex flex-col gap-5" key="main_team">
+                    <div>
+                        <label class="mb-1 block text-sm font-medium text-gray-600">Überschrift</label>
+                        <input inputType="title" type="text" class="w-full rounded-lg border-2 border-gray-200 bg-gray-50 px-4 py-2 text-base font-semibold text-gray-900 focus:border-blue-500 focus:bg-white focus:outline-none"
+                            value="{{ team_text.title|default:'Team' }}">
+                    </div>
+                    <div>
+                        <label class="mb-1 block text-sm font-medium text-gray-600">Beschreibung</label>
+                        <textarea inputType="description" rows="5" class="w-full rounded-lg border-2 border-gray-200 bg-gray-50 px-4 py-2 text-base leading-relaxed text-gray-800 focus:border-blue-500 focus:bg-white focus:outline-none">{{ team_text.description }}</textarea>
+                    </div>
+                </div>
+
+                {% url 'cms:team-list' as team_manage_url %}
+                {% include "pages/cms/content/sites/mainsite/_manage_card.html" with title="Teammitglieder" icon="bi-people" count=member_count count_label="Aktive Einträge" url=team_manage_url %}
+            </div>
+        </section>
+
+        <section class="rounded-lg border border-gray-200 bg-white p-5 shadow-sm sm:p-6">
+            <div class="mb-5 flex items-center gap-3">
+                <span class="grid h-9 w-9 place-items-center rounded-full bg-blue-100 text-blue-700"><i class="bi bi-journal-richtext"></i></span>
+                <div>
+                    <h2 class="text-lg font-bold text-gray-900">Blogbereich</h2>
+                    <p class="text-sm text-gray-500">Überschrift und Beschreibung des Blog-Teasers auf der Startseite; einzelne Artikel werden im Blog-Bereich verwaltet.</p>
+                </div>
+            </div>
+
+            <div class="grid gap-8 lg:grid-cols-2">
+                <div class="text-content flex flex-col gap-5" key="main_blog">
+                    <div>
+                        <label class="mb-1 block text-sm font-medium text-gray-600">Überschrift</label>
+                        <input inputType="title" type="text" class="w-full rounded-lg border-2 border-gray-200 bg-gray-50 px-4 py-2 text-base font-semibold text-gray-900 focus:border-blue-500 focus:bg-white focus:outline-none"
+                            value="{{ blog_text.title|default:'Aktuelles aus der Zahnarztpraxis' }}">
+                    </div>
+                    <div>
+                        <label class="mb-1 block text-sm font-medium text-gray-600">Beschreibung</label>
+                        <textarea inputType="description" rows="5" class="w-full rounded-lg border-2 border-gray-200 bg-gray-50 px-4 py-2 text-base leading-relaxed text-gray-800 focus:border-blue-500 focus:bg-white focus:outline-none">{{ blog_text.description|default:'Tipps zur Zahngesundheit, Einblicke in moderne Behandlungen und Neuigkeiten aus unserer Praxis.' }}</textarea>
+                    </div>
+                    <div>
+                        <label class="mb-1 block text-sm font-medium text-gray-600">Button-Text</label>
+                        <input inputType="buttonText" type="text" class="w-full rounded-lg border-2 border-gray-200 bg-gray-50 px-4 py-2 text-base font-medium text-gray-900 focus:border-blue-500 focus:bg-white focus:outline-none"
+                            value="{{ blog_text.buttonText|default:'Alle Artikel ansehen' }}">
+                    </div>
+                </div>
+
+                {% url 'cms:blog-view' as blog_manage_url %}
+                {% include "pages/cms/content/sites/mainsite/_manage_card.html" with title="Blogartikel" icon="bi-journal-text" count=blog_count count_label="Aktuelle Beiträge" url=blog_manage_url %}
+            </div>
+        </section>
+
+        <section class="rounded-lg border border-gray-200 bg-white p-5 shadow-sm sm:p-6">
+            <div class="mb-5 flex items-center gap-3">
+                <span class="grid h-9 w-9 place-items-center rounded-full bg-blue-100 text-blue-700"><i class="bi bi-envelope"></i></span>
+                <div>
+                    <h2 class="text-lg font-bold text-gray-900">Kontaktbereich</h2>
+                    <p class="text-sm text-gray-500">Titel und Beschreibung des Kontaktblocks auf der Startseite.</p>
+                </div>
+            </div>
+
+            <div class="text-content flex flex-col gap-5" key="main_contact">
+                <div>
+                    <label class="mb-1 block text-sm font-medium text-gray-600">Überschrift</label>
+                    <input inputType="title" type="text" class="w-full rounded-lg border-2 border-gray-200 bg-gray-50 px-4 py-2 text-base font-semibold text-gray-900 focus:border-blue-500 focus:bg-white focus:outline-none"
+                        value="{{ contact_text.title|default:'Unsere Kontakte' }}">
+                </div>
+                <div>
+                    <label class="mb-1 block text-sm font-medium text-gray-600">Beschreibung</label>
+                    <textarea inputType="description" rows="4" class="w-full rounded-lg border-2 border-gray-200 bg-gray-50 px-4 py-2 text-base leading-relaxed text-gray-800 focus:border-blue-500 focus:bg-white focus:outline-none">{{ contact_text.description|default:'Wir stehen Ihnen jederzeit zur Verfügung, um Fragen zu beantworten und Termine zu vereinbaren.' }}</textarea>
+                </div>
+            </div>
+        </section>
+
+        <section class="rounded-lg border border-gray-200 bg-white p-5 shadow-sm sm:p-6">
+            <div class="mb-5 flex items-center gap-3">
+                <span class="grid h-9 w-9 place-items-center rounded-full bg-blue-100 text-blue-700"><i class="bi bi-question-lg"></i></span>
+                <div>
+                    <h2 class="text-lg font-bold text-gray-900">FAQ</h2>
+                    <p class="text-sm text-gray-500">Einleitung der FAQ-Sektion; einzelne Fragen werden im FAQ-Bereich verwaltet.</p>
+                </div>
+            </div>
+
+            <div class="grid gap-8 lg:grid-cols-2">
+                <div class="text-content flex flex-col gap-5" key="main_faq">
+                    <div>
+                        <label class="mb-1 block text-sm font-medium text-gray-600">Überschrift</label>
+                        <input inputType="title" type="text" class="w-full rounded-lg border-2 border-gray-200 bg-gray-50 px-4 py-2 text-base font-semibold text-gray-900 focus:border-blue-500 focus:bg-white focus:outline-none"
+                            value="{{ faq_text.title|default:'FAQs' }}">
+                    </div>
+                    <div>
+                        <label class="mb-1 block text-sm font-medium text-gray-600">Beschreibung</label>
+                        <textarea inputType="description" rows="5" class="w-full rounded-lg border-2 border-gray-200 bg-gray-50 px-4 py-2 text-base leading-relaxed text-gray-800 focus:border-blue-500 focus:bg-white focus:outline-none">{{ faq_text.description }}</textarea>
+                    </div>
+                </div>
+
+                {% url 'cms:faq-view' as faq_manage_url %}
+                {% include "pages/cms/content/sites/mainsite/_manage_card.html" with title="FAQ-Fragen" icon="bi-question-lg" count=faq_count count_label="Aktuelle Fragen" url=faq_manage_url %}
+            </div>
+        </section>
+
+        <section class="rounded-lg border border-gray-200 bg-white p-5 shadow-sm sm:p-6">
+            <div class="mb-5 flex items-center gap-3">
+                <span class="grid h-9 w-9 place-items-center rounded-full bg-blue-100 text-blue-700"><i class="bi bi-layout-text-window-reverse"></i></span>
+                <div>
+                    <h2 class="text-lg font-bold text-gray-900">Footer</h2>
+                    <p class="text-sm text-gray-500">Text und Button im öffentlichen Footer.</p>
+                </div>
+            </div>
+
+            <div class="text-content flex flex-col gap-5" key="footer">
+                <div>
+                    <label class="mb-1 block text-sm font-medium text-gray-600">Überschrift</label>
+                    <input inputType="title" type="text" class="w-full rounded-lg border-2 border-gray-200 bg-gray-50 px-4 py-2 text-base font-semibold text-gray-900 focus:border-blue-500 focus:bg-white focus:outline-none"
+                        value="{{ footer_text.title }}">
+                </div>
+                <div>
+                    <label class="mb-1 block text-sm font-medium text-gray-600">Beschreibung</label>
+                    <textarea inputType="description" rows="4" class="w-full rounded-lg border-2 border-gray-200 bg-gray-50 px-4 py-2 text-base leading-relaxed text-gray-800 focus:border-blue-500 focus:bg-white focus:outline-none">{{ footer_text.description }}</textarea>
+                </div>
+                <div>
+                    <label class="mb-1 block text-sm font-medium text-gray-600">Button-Text</label>
+                    <input inputType="buttonText" type="text" class="w-full rounded-lg border-2 border-gray-200 bg-gray-50 px-4 py-2 text-base font-medium text-gray-900 focus:border-blue-500 focus:bg-white focus:outline-none"
+                        value="{{ footer_text.buttonText|default:'Termin vereinbaren' }}">
+                </div>
+            </div>
+        </section>
+    </div>
+</div>
+{% endblock content %}
+
+{% block javascriptend %}
+{% compress js %}
+<script defer src="{% static 'js/cms.js' %}"></script>
+<script defer src="{% static 'js/cms/content/siteManager.js' %}"></script>
+<script src="{% static 'js/cms/content/save-text.js' %}"></script>
+<script defer src="{% static 'js/cms/unsaved-guard.js' %}"></script>
+<script type="text/javascript" src="{% static 'js/cms/slick/slick.min.js' %}"></script>
+<script>
+    $(document).ready(function () {
+        $('#holmerMainPageEditor .carousel').slick({
+            dots: true,
+            arrows: true,
+            infinite: true,
+            slidesToShow: 1,
+            slidesToScroll: 1,
+            autoplay: true,
+            autoplaySpeed: 3500
+        });
+    });
+</script>
+{% endcompress js %}
+{% endblock javascriptend %}

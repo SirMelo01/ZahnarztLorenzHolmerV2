@@ -1,0 +1,84 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}{{ block.super }} | Blog{% endblock title %}
+{% block meta_description %}Aktuelle Hinweise, Einblicke aus der Praxis und verständliche Informationen zu Zahngesundheit, Prophylaxe und moderner Zahnmedizin.{% endblock %}
+{% block og_title %}Blog | Dr. Lorenz Holmer{% endblock %}
+{% block og_description %}Wissenswertes rund um Ihre Zahngesundheit und Neuigkeiten aus der Zahnarztpraxis Dr. Lorenz Holmer.{% endblock %}
+{% block twitter_title %}Blog | Dr. Lorenz Holmer{% endblock %}
+{% block twitter_description %}Wissenswertes rund um Ihre Zahngesundheit und Neuigkeiten aus der Zahnarztpraxis Dr. Lorenz Holmer.{% endblock %}
+
+{% block content %}
+<main class="bg-white">
+  <section class="relative overflow-hidden bg-gray-100">
+    <div class="mx-auto max-w-6xl px-4 py-14 md:py-20">
+      <p class="text-sm font-semibold uppercase tracking-wide text-[#262C5D]">
+        {% if blog_overview_hero.header and blog_overview_hero.header != "Zahnarzt-Blog" %}{{ blog_overview_hero.header }}{% else %}Blog{% endif %}
+      </p>
+      <div class="mt-3 max-w-3xl">
+        <h1 class="text-4xl font-semibold leading-tight text-[#262C5D] md:text-5xl">{{ blog_overview_hero.title|default:"Wissenswertes rund um Ihre Zahngesundheit" }}</h1>
+        <p class="mt-5 text-lg leading-8 text-gray-600">
+          {{ blog_overview_hero.description|default:"Aktuelle Hinweise, Einblicke aus der Praxis und verständliche Informationen zu moderner Zahnmedizin." }}
+        </p>
+      </div>
+    </div>
+    <div class="absolute bottom-0 h-16 w-full bg-gradient-to-b from-transparent to-white"></div>
+  </section>
+
+  <section class="mx-auto min-h-screen max-w-6xl px-4 py-10 md:py-14">
+    <div class="grid grid-cols-1 gap-7 md:grid-cols-2 lg:grid-cols-3">
+      {% for blog in object_list %}
+      {% if blog.active %}
+      <article class="flex h-full flex-col overflow-hidden rounded-xl bg-white shadow-md ring-1 ring-gray-200 transition hover:-translate-y-1 hover:shadow-lg">
+        <a href="{% url 'blog:blog-detail' pk=blog.pk slug_title=blog.slug %}" class="block">
+          {% if blog.title_image %}
+          <img class="h-56 w-full object-cover" loading="lazy" decoding="async" src="{{ blog.title_image.url }}" alt="{{ blog.title_image_alt|default:blog.title }}" title="{{ blog.title_image_title|default:blog.title }}">
+          {% else %}
+          <div class="flex h-56 w-full items-center justify-center bg-gray-100 text-[#262C5D]">
+            <i class="bi bi-journal-richtext text-4xl"></i>
+          </div>
+          {% endif %}
+        </a>
+        <div class="flex flex-1 flex-col p-5">
+          <div class="flex items-center gap-3 text-sm font-semibold text-[#262C5D]">
+            <time datetime="{{ blog.last_updated|date:'Y-m-d' }}">{{ blog.last_updated|date:"d.m.Y" }}</time>
+            <span>Praxiswissen</span>
+          </div>
+          <h2 class="mt-3 text-xl font-semibold leading-snug text-[#262C5D]">
+            <a href="{% url 'blog:blog-detail' pk=blog.pk slug_title=blog.slug %}" class="hover:text-slate-900">{{ blog.title }}</a>
+          </h2>
+          {% if blog.description %}
+          <p class="mt-3 flex-1 text-gray-600">{{ blog.description|truncatechars:150 }}</p>
+          {% endif %}
+          <a href="{% url 'blog:blog-detail' pk=blog.pk slug_title=blog.slug %}"
+             class="mt-5 inline-flex items-center font-semibold text-[#262C5D] hover:text-slate-900">
+            Artikel lesen <i class="bi bi-arrow-right ml-2"></i>
+          </a>
+        </div>
+      </article>
+      {% endif %}
+      {% empty %}
+      <p class="text-gray-600">Aktuell sind keine Blogartikel veröffentlicht.</p>
+      {% endfor %}
+    </div>
+
+    {% if is_paginated %}
+    <nav class="mt-10 mb-8 flex items-center justify-center gap-2" aria-label="Blog Seitennavigation">
+      {% if page_obj.has_previous %}
+        <a href="?page=1" class="rounded border border-gray-300 px-3 py-2 hover:bg-gray-50">&laquo;</a>
+        <a href="?page={{ page_obj.previous_page_number }}" class="rounded border border-gray-300 px-3 py-2 hover:bg-gray-50">Zurück</a>
+      {% endif %}
+
+      <span class="rounded bg-[#262C5D] px-3 py-2 font-semibold text-white">
+        {{ page_obj.number }} / {{ page_obj.paginator.num_pages }}
+      </span>
+
+      {% if page_obj.has_next %}
+        <a href="?page={{ page_obj.next_page_number }}" class="rounded border border-gray-300 px-3 py-2 hover:bg-gray-50">Weiter</a>
+        <a href="?page={{ page_obj.paginator.num_pages }}" class="rounded border border-gray-300 px-3 py-2 hover:bg-gray-50">&raquo;</a>
+      {% endif %}
+    </nav>
+    {% endif %}
+  </section>
+</main>
+{% endblock content %}

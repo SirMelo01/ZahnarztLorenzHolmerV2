@@ -1,0 +1,295 @@
+{% load static i18n compress%}
+<!DOCTYPE html>
+<html lang="de">
+
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  <title>{% block title %}Zahnarzt Dr. Lorenz Holmer{% endblock title %}</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="author" content="Zahnarztpraxis Dr. Lorenz Holmer">
+  
+  <meta name="description"
+    content="Dr. med. dent. Lorenz Holmer - Ihr Zahnarzt in Plattling im Landkreis Deggendorf. Moderne Zahnmedizin, Prophylaxe und einfühlsame Behandlung für die ganze Familie." />
+  <link rel="canonical" href="https://zahnarzt-dr-holmer.de{{ request.path }}">
+
+  <link rel="icon" type="image/jpg" href="{% static 'images/Logo/Favicon.jpg' %}" sizes="200x200">
+
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="{% block og_title %}Zahnarzt Dr. Lorenz Holmer - Plattling{% endblock %}">
+  <meta property="og:description" content="{% block og_description %}Moderne Zahnarztpraxis in Plattling für Prophylaxe, Zahnerhalt und individuelle Zahnmedizin.{% endblock %}">
+  <meta property="og:url" content="https://zahnarzt-dr-holmer.de{{ request.path }}">
+
+  {% compress css inline %}
+  <link href="{% static 'css/output.css' %}" rel="stylesheet">
+  <link href="{% static 'css/holmer-output.css' %}" rel="stylesheet">
+  <link href="{% static 'css/swiper-bundle.min.css' %}" rel="stylesheet">
+  <link href="{% static 'css/holmer-utils.css' %}" rel="stylesheet">
+  <link href="{% static 'css/notifications.css' %}" rel="stylesheet">
+  {% endcompress css %}
+
+  {% compress js inline %}
+  <script defer src="{% static 'js/loadinit.js' %}"></script>
+  <!-- jQuery Bibliothek (https://jquery.com/)
+           Copyright jQuery Foundation and other contributors
+           Released under the MIT license
+           https://jquery.org/license/ -->
+ <script src="{% static 'js/libs/swiper-bundle.min.js' %}"></script>
+  <script src="{% static 'js/libs/jquery-3.7.0.min.js' %}"></script>
+  <script src="{% static 'js/libs/img-comparison-slider.js' %}"></script>
+  <script defer src="{% static 'js/notifications.js' %}"></script>
+  {% endcompress js %}
+
+
+  {% block css %}
+  {% endblock css %}
+
+  {% block javascript %}
+  {% endblock javascript %}
+
+</head>
+
+<body class="bg-white {{ owner_data.global_font|default:'font-sans' }}">
+
+  <div id="welcome-screen-cookie" class="hidden">
+    <div id="welcome-screen" class="z-50">
+      <img src="{% static 'images/Logo/Logo_.png' %}" alt="Logo" id="logo">
+    </div>
+  </div>
+
+  <div id="main-content">
+    <!--Navbar Beginn-->
+    {% block navbar %}
+    {% if owner_data and owner_data.vacation %}
+    <div id="info-banner" class="bg-[#262C5D] text-white text-center text-sm py-2 px-4 sticky top-0 z-40">
+      <p>{{owner_data.vacationText}}</p>
+    </div>
+    {% endif %}
+    <!-- Top Info Bar (Kombinierte Navbar) -->
+    <div id="top-info-bar" class="border-b-2 border-b-gray-300/40 py-4 sticky top-0 z-30 bg-gray-100">
+      <!-- Der sticky-Offset wird dynamisch über die CSS-Variable --info-banner-height
+           (#top-info-bar in utils.css) anhand der tatsächlichen Banner-Höhe gesetzt. -->
+      <div class="max-w-6xl mx-auto px-4 flex justify-between items-center h-full">
+        <div class="flex items-center space-x-2">
+          <a href="/">
+            <img id="top-logo" src="{% static 'images/Logo/Logo in Farbe komplett.png'%}" alt="Logo"
+            class="w-56 h-auto max-w-full max-h-24">
+          </a>
+        </div>
+
+        <!-- Menüpunkte -->
+        <div class="hidden md:flex items-center space-x-6 text-lg text-gray-700">
+          <a href="{% url 'home' %}#Leistungen"  class="hover:text-[#262C5D]">Leistungen</a>
+          <a href="{% url 'home' %}#Galerie" class="hover:text-[#262C5D]">Galerie</a>
+          <a href="{% url 'home' %}#Team" class="hover:text-[#262C5D]">Team</a>
+          <a href="{% url 'blog:blog' %}" class="hover:text-[#262C5D]">Blog</a>
+          <a href="{% url 'home' %}#Kontakt" class="hover:text-[#262C5D]">Kontakt</a>
+          <!-- Telefon Icon mit größerem Abstand -->
+          <a href="tel:{% if owner_data and owner_data.tel_number %}{{owner_data.tel_number}}{% else %}+12368978974{% endif %}" class="hover:text-[#262C5D] pl-20"> <!-- ml-8 für Abstand -->
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
+              stroke="currentColor" class="w-7 h-7 text-gray-700 hover:text-[#262C5D]">
+              <path stroke-linecap="round" stroke-linejoin="round"
+                d="M2.25 6.75c0 8.284 6.716 15 15 15h2.25a2.25 2.25 0 0 0 2.25-2.25v-1.372c0-.516-.351-.966-.852-1.091l-4.423-1.106c-.44-.11-.902.055-1.173.417l-.97 1.293c-.282.376-.769.542-1.21.38a12.035 12.035 0 0 1-7.143-7.143c-.162-.441.004-.928.38-1.21l1.293-.97c.363-.271.527-.734.417-1.173L6.963 3.102a1.125 1.125 0 0 0-1.091-.852H4.5A2.25 2.25 0 0 0 2.25 4.5v2.25Z" />
+            </svg>
+          </a>
+          <a href="{% if owner_data and owner_data.appointmentURL %}{{owner_data.appointmentURL}}{% else %}#{% endif %}" class="hover:text-[#262C5D] pl-3">
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
+              stroke="currentColor" class="size-7">
+              <path stroke-linecap="round" stroke-linejoin="round"
+                d="M6.75 3v2.25M17.25 3v2.25M3 18.75V7.5a2.25 2.25 0 0 1 2.25-2.25h13.5A2.25 2.25 0 0 1 21 7.5v11.25m-18 0A2.25 2.25 0 0 0 5.25 21h13.5A2.25 2.25 0 0 0 21 18.75m-18 0v-7.5A2.25 2.25 0 0 1 5.25 9h13.5A2.25 2.25 0 0 1 21 11.25v7.5m-9-6h.008v.008H12v-.008ZM12 15h.008v.008H12V15Zm0 2.25h.008v.008H12v-.008ZM9.75 15h.008v.008H9.75V15Zm0 2.25h.008v.008H9.75v-.008ZM7.5 15h.008v.008H7.5V15Zm0 2.25h.008v.008H7.5v-.008Zm6.75-4.5h.008v.008h-.008v-.008Zm0 2.25h.008v.008h-.008V15Zm0 2.25h.008v.008h-.008v-.008Zm2.25-4.5h.008v.008H16.5v-.008Zm0 2.25h.008v.008H16.5V15Z" />
+            </svg>
+          </a>
+
+
+        </div>
+
+        <!-- Burger Menu für Mobilgeräte -->
+        <button id="menu-toggle" class="md:hidden text-slate-900 focus:outline-none focus:text-gray-600">
+          ☰
+        </button>
+      </div>
+
+      <!-- Mobile Menu -->
+      <div id="mobile-menu"
+        class="hidden md:hidden fixed inset-0 bg-white z-50 flex flex-col items-center justify-center space-y-4">
+        <!-- Close Button (X) -->
+        <button id="menu-toggle2" class="absolute top-4 right-4 text-gray-700">
+          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
+            stroke="currentColor" class="w-8 h-8">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
+          </svg>
+        </button>
+
+        <!-- Menu Links -->
+        <a href="{% url 'home' %}#Leistungen" class="text-lg py-2 hover:text-[#262C5D]">Leistungen</a>
+        <a href="{% url 'home' %}#Galerie" class="text-lg py-2 hover:text-[#262C5D]">Galerie</a>
+        <a href="{% url 'home' %}#Team" class="text-lg py-2 hover:text-[#262C5D]">Team</a>
+        <a href="{% url 'blog:blog' %}" class="text-lg py-2 hover:text-[#262C5D]">Blog</a>
+        <a href="{% url 'home' %}#Kontakt" class="text-lg py-2 hover:text-[#262C5D]">Kontakt</a>
+
+        <!-- Telefon Icon im Burger-Menü -->
+        <a href="tel:{% if owner_data and owner_data.tel_number %}{{owner_data.tel_number}}{% else %}+12368978974{% endif %}" class="text-lg py-2 hover:text-[#262C5D] flex items-center">
+          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
+            stroke="currentColor" class="w-6 h-6 inline-block text-gray-700 mr-2">
+            <path stroke-linecap="round" stroke-linejoin="round"
+              d="M2.25 6.75c0 8.284 6.716 15 15 15h2.25a2.25 2.25 0 0 0 2.25-2.25v-1.372c0-.516-.351-.966-.852-1.091l-4.423-1.106c-.44-.11-.902.055-1.173.417l-.97 1.293c-.282.376-.769.542-1.21.38a12.035 12.035 0 0 1-7.143-7.143c-.162-.441.004-.928.38-1.21l1.293-.97c.363-.271.527-.734.417-1.173L6.963 3.102a1.125 1.125 0 0 0-1.091-.852H4.5A2.25 2.25 0 0 0 2.25 4.5v2.25Z" />
+          </svg>
+          Anrufen
+        </a>
+
+        <!-- Kalender Icon im Burger-Menü -->
+        <a href="/" class="text-lg py-2 hover:text-[#262C5D] flex items-center">
+          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
+            stroke="currentColor" class="w-6 h-6 inline-block text-gray-700 mr-2">
+            <path stroke-linecap="round" stroke-linejoin="round"
+              d="M6.75 3v2.25M17.25 3v2.25M3 18.75V7.5a2.25 2.25 0 0 1 2.25-2.25h13.5A2.25 2.25 0 0 1 21 7.5v11.25m-18 0A2.25 2.25 0 0 0 5.25 21h13.5A2.25 2.25 0 0 0 21 18.75m-18 0v-7.5A2.25 2.25 0 0 1 5.25 9h13.5A2.25 2.25 0 0 1 21 11.25v7.5m-9-6h.008v.008H12v-.008ZM12 15h.008v.008H12V15Zm0 2.25h.008v.008H12v-.008ZM9.75 15h.008v.008H9.75V15Zm0 2.25h.008v.008H9.75v-.008ZM7.5 15h.008v.008H7.5V15Zm0 2.25h.008v.008H7.5v-.008Zm6.75-4.5h.008v.008h-.008v-.008Zm0 2.25h.008v.008h-.008V15Zm0 2.25h.008v.008h-.008v-.008Zm2.25-4.5h.008v.008H16.5v-.008Zm0 2.25h.008v.008H16.5V15Z" />
+          </svg>
+          Kalender
+        </a>
+      </div>
+    </div>
+    {% endblock navbar %}
+    <!--Navbar End-->
+
+    {% block content %}
+
+    {% endblock content %}
+
+    <!--Cookies Beginn-->
+    {% block cookies %}
+    <div class="relative z-50 hidden" aria-labelledby="modal-title" role="dialog" aria-modal="true" id="menu-cookie">
+      <div class="fixed inset-0 bg-gray-500 bg-opacity-75 transition-opacity"></div>
+      <div class="fixed inset-0 z-10 overflow-y-auto">
+        <div class="flex min-h-full items-end justify-center p-4 text-center sm:items-center sm:p-0">
+          <div
+            class="relative transform overflow-hidden rounded-lg bg-white text-left shadow-xl transition-all sm:my-8 sm:w-full sm:max-w-lg">
+            <div class="bg-white px-4 pt-5 pb-4 sm:p-6 sm:pb-4">
+              <div class="sm:flex sm:items-start">
+                <div
+                  class="mx-auto flex h-12 w-12 flex-shrink-0 items-center justify-center rounded-full sm:mx-0 sm:h-10 sm:w-10">
+                  <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
+                    stroke="currentColor" class="w-6 h-6">
+                    <path stroke-linecap="round" stroke-linejoin="round"
+                      d="M9 12.75L11.25 15 15 9.75m-3-7.036A11.959 11.959 0 013.598 6 11.99 11.99 0 003 9.749c0 5.592 3.824 10.29 9 11.623 5.176-1.332 9-6.03 9-11.622 0-1.31-.21-2.571-.598-3.751h-.152c-3.196 0-6.1-1.248-8.25-3.285z" />
+                  </svg>
+                </div>
+                <div class="mt-3 text-center sm:mt-0 sm:ml-4 sm:text-left">
+                  <h3 class="text-xl font-medium leading-6 text-gray-800" id="modal-title">
+                    Cookie-Richtlinie
+                  </h3>
+                  <div class="mt-2">
+                    <p class="text-sm text-gray-500">
+                      Diese Website verwendet Cookies. Weitere Informationen zu
+                      den Cookie-Arten finden sich unter den jeweiligen
+                      Kategorien. Dort lassen sich auch einzelne Cookies
+                      aktivieren. Die Cookie-Einstellungen können jederzeit über
+                      den Link im Footer dieser Website angepasst werden.
+                    </p>
+                    <div class="text-xs mt-5 mr-3">
+                      <a href="{% url 'impressum' %}" class="mr-5">Impressum</a>
+                      <a href="{% url 'datenschutz' %}">Datenschutz</a>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="bg-gray-50 px-4 py-3 sm:flex sm:flex-row-reverse sm:px-6">
+              <button onclick="acceptCookie()"
+                class="mt-3 inline-flex w-full justify-center rounded-md border border-gray-300 bg-blue-900 text-white px-4 py-2 text-base font-medium shadow-sm hover:bg-green-600 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 sm:mt-0 sm:ml-3 sm:w-auto sm:text-sm transition ease-linear duration-300">
+                Bestätigen
+              </button>
+              <button onclick="refuseCookie()"
+                class="inline-flex w-full justify-center rounded-md border border-transparent bg-blue-900 px-4 py-2 text-base font-medium text-white shadow-sm hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2 sm:ml-3 sm:w-auto sm:text-sm transition ease-linear duration-300">
+                Ablehnen
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    {% endblock cookies %}
+    <!--Cookies End-->
+    <!--Footer Beginn-->
+    {% block footer %}
+    <footer class="bg-gray-100 py-12">
+      <div class="max-w-6xl mx-auto px-4">
+        <!-- Flex Container für Footer-Inhalte -->
+        <div class="flex flex-col md:flex-row md:justify-between space-y-8 md:space-y-0">
+          <!-- Contact Card -->
+          <div class="bg-white p-6 rounded-xl shadow-md flex-1 md:mr-6">
+            <div class="flex items-center space-x-2 mb-5">
+              <img src="{% static 'images/Logo/Logo in Farbe komplett.png'%}" alt="Logo" class="w-64 h-auto max-w-full max-h-40">
+            </div>
+            <p class="text-gray-600 mb-6">{% if footerText %}{{footerText.title}}{% else %}Vivamus posuere tellus venenatis felis euismod, quis fringilla
+              sapien.{% endif %}
+            </p>
+            <div class="space-y-4">
+              <div class="flex items-center space-x-1">
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
+                  stroke="currentColor" class="size-5 text-[#262C5D]">
+                  <path stroke-linecap="round" stroke-linejoin="round"
+                    d="M2.25 6.75c0 8.284 6.716 15 15 15h2.25a2.25 2.25 0 0 0 2.25-2.25v-1.372c0-.516-.351-.966-.852-1.091l-4.423-1.106c-.44-.11-.902.055-1.173.417l-.97 1.293c-.282.376-.769.542-1.21.38a12.035 12.035 0 0 1-7.143-7.143c-.162-.441.004-.928.38-1.21l1.293-.97c.363-.271.527-.734.417-1.173L6.963 3.102a1.125 1.125 0 0 0-1.091-.852H4.5A2.25 2.25 0 0 0 2.25 4.5v2.25Z" />
+                </svg>
+                <span>{% if owner_data and owner_data.tel_number %}{{owner_data.tel_number}}{% else %}+123 6897 8974{% endif %}</span>
+              </div>
+              <div class="flex items-center space-x-1">
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
+                  stroke="currentColor" class="size-5 text-[#262C5D]">
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M15 10.5a3 3 0 1 1-6 0 3 3 0 0 1 6 0Z" />
+                  <path stroke-linecap="round" stroke-linejoin="round"
+                    d="M19.5 10.5c0 7.142-7.5 11.25-7.5 11.25S4.5 17.642 4.5 10.5a7.5 7.5 0 1 1 15 0Z" />
+                </svg>
+                <span>{% if owner_data and owner_data.address %}{{owner_data.address}}{% else %}Deggendorfer Str. 50A, 94447 Plattling{%endif%}</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Call to Action Button -->
+          <div class="flex flex-col justify-center items-center md:justify-center flex-1 md:mr-6">
+            <p class="text-gray-600 mb-4 text-center md:text-left">{% if footerText %}{{footerText.description}}{% else %}Class aptent taciti sociosqu ad litora
+              torquent per conubia nostra, per inceptos himenaeos. Nullam ornare nunc a mauris euismod, in
+              sollicitudin turpis placerat.{% endif %}</p>
+            <a href="{% if owner_data and owner_data.appointmentURL %}{{owner_data.appointmentURL}}{% else %}#{% endif %}" class="bg-[#262C5D] text-white px-8 py-3 rounded-full hover:bg-slate-900 shadow-lg">{% if footerText and footerText.buttonText %}{{footerText.buttonText}}{% else %}Termin vereinbaren{% endif %}</a>
+          </div>
+
+          <!-- Links -->
+          <div class="md:flex-1 flex justify-center md:justify-normal space-x-16">
+            <div>
+              <p class="text-lg font-semibold text-[#262C5D]">Quick Links</p>
+              <ul class="mt-4 space-y-2">
+                <li><a href="{% url 'impressum' %}" class="text-gray-600 hover:text-[#262C5D]">Impressum</a></li>
+                <li><a href="{% url 'datenschutz' %}" class="text-gray-600 hover:text-[#262C5D]">Datenschutz</a></li>
+                <li><a href="{% url 'cookies' %}" class="text-gray-600 hover:text-[#262C5D]">Cookies</a></li>
+              </ul>
+            </div>
+            <div>
+              <p class="text-lg font-semibold text-[#262C5D]">Help Center</p>
+              <ul class="mt-4 space-y-2">
+                <li><a href="{% url 'home' %}#Leistungen" class="text-gray-600 hover:text-[#262C5D]">Leistungen</a></li>
+                <li><a href="{% url 'home' %}#Galerie" class="text-gray-600 hover:text-[#262C5D]">Galerie</a></li>
+                <li><a href="{% url 'home' %}#Kontakt" class="text-gray-600 hover:text-[#262C5D]">Kontakt</a></li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Copyright Line -->
+      <div class="mt-12 text-center text-gray-500 text-sm">
+        © Lorenz Holmer {% load tz %} {% now "Y" %}. Designed and hosted by YooLink.
+      </div>
+    </footer>
+    {% endblock footer %}
+
+    <!--Footer End-->
+  </div>
+
+  {% compress js inline %}
+  <script defer src="{% static 'js/holmer-base.js' %}"></script>
+  {% endcompress js %}
+  {% block javascriptend %}
+  {% endblock javascriptend %}
+
+</body>
+
+</html>
