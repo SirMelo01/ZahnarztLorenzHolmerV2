@@ -98,9 +98,11 @@ def load_index(request):
     for index in range(1, 8):
         services.append(
             {
+                "index": index,
+                "single_image_only": index <= 2,
                 "text": _get_text(f"main_service_{index}"),
                 "prev_image": _get_image(f"main_service_{index}_prev"),
-                "after_image": _get_image(f"main_service_{index}_after"),
+                "after_image": None if index <= 2 else _get_image(f"main_service_{index}_after"),
                 "icon": _get_image(f"main_service_{index}_icon"),
             }
         )

@@ -160,7 +160,7 @@
                 {% for service in services %}
                 <div class="rounded-lg border border-gray-200 bg-gray-50 p-4 sm:p-5">
                     <h3 class="mb-4 text-base font-bold text-gray-900">Leistung {{ service.index }}</h3>
-                    <div class="service-editor-row {% if forloop.counter|divisibleby:2 %}service-editor-row--reverse{% endif %}">
+                    <div class="service-editor-row {% if forloop.counter0|divisibleby:2 %}service-editor-row--reverse{% endif %}">
                         <div class="service-editor-text text-content rounded-lg border border-gray-200 bg-white p-4" key="main_service_{{ service.index }}">
                             <div class="mb-4 flex flex-col gap-4 sm:flex-row sm:items-end">
                                 <div class="w-24 shrink-0">
@@ -187,9 +187,9 @@
                         </div>
 
                         <div class="service-editor-media rounded-lg border border-gray-200 bg-white p-4">
-                            <div class="grid gap-4 sm:grid-cols-2">
+                            <div class="grid gap-4 {% if not service.single_image_only %}sm:grid-cols-2{% endif %}">
                             <div class="self-stretch">
-                                <p class="mb-1 text-xs font-semibold uppercase tracking-wider text-orange-600">Vorher</p>
+                                <p class="mb-1 text-xs font-semibold uppercase tracking-wider text-orange-600">{% if service.single_image_only %}Bild{% else %}Vorher{% endif %}</p>
                                 <div class="relative aspect-[4/3] min-h-[12rem] overflow-hidden rounded-lg border border-gray-200 bg-white">
                                     <span class="edit-img not-sortable absolute left-1 top-1 z-10 inline-block rounded-full bg-orange-500 px-2 py-1 text-xs font-semibold text-white hover:cursor-pointer"><i class="bi bi-pencil-square"></i></span>
                                     <img src="{% if service.prev_image %}{{ service.prev_image.file.url }}{% else %}{% static 'images/Bilder Shooting/LH_1.jpg' %}{% endif %}"
@@ -199,6 +199,7 @@
                                         class="content-image h-full w-full object-cover">
                                 </div>
                             </div>
+                            {% if not service.single_image_only %}
                             <div class="self-stretch">
                                 <p class="mb-1 text-xs font-semibold uppercase tracking-wider text-orange-600">Nachher</p>
                                 <div class="relative aspect-[4/3] min-h-[12rem] overflow-hidden rounded-lg border border-gray-200 bg-white">
@@ -210,6 +211,7 @@
                                         class="content-image h-full w-full object-cover">
                                 </div>
                             </div>
+                            {% endif %}
                             </div>
                         </div>
                     </div>

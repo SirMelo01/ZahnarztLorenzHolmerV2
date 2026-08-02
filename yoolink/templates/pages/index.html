@@ -63,10 +63,16 @@
     <div class="mt-4 md:mt-20 max-w-6xl mx-auto px-4 space-y-24">
 
         {% for service in services %}
-    <div class="flex flex-col-reverse md:flex-row-reverse items-center {% if forloop.counter|divisibleby:2 %}md:flex-row{% endif %}">
+    <div class="flex flex-col-reverse md:flex-row items-center {% if forloop.counter|divisibleby:2 %}md:flex-row-reverse{% endif %}">
         <!-- Bild-Bereich -->
-        <div class="flex-1 flex justify-center items-center {% if forloop.counter|divisibleby:2 %}md:mr-8{% else %}md:ml-8{% endif %}">
-            {% if service.prev_image and service.after_image %}
+        <div class="flex-1 flex justify-center items-center {% if forloop.counter|divisibleby:2 %}md:ml-8{% else %}md:mr-8{% endif %}">
+            {% if service.single_image_only %}
+                {% if service.prev_image %}
+                <img src="{{ service.prev_image.file.url }}" alt="{{ service.prev_image.title }}" class="w-full rounded-lg shadow-lg shadow-slate-600">
+                {% else %}
+                <img src="{% static 'images/Bilder Shooting/LH_1.jpg' %}" alt="Leistungen Bild" class="w-full rounded-lg shadow-lg shadow-slate-600">
+                {% endif %}
+            {% elif service.prev_image and service.after_image %}
                 <img-comparison-slider class="shadow-lg rounded-xl shadow-slate-600">
                     <img class="rounded-lg max-h-[24rem]" slot="first" src="{{ service.prev_image.file.url }}" alt="{{ service.prev_image.title }}" />
                     <img class="rounded-lg max-h-[24rem]" slot="second" src="{{ service.after_image.file.url }}" alt="{{ service.after_image.title }}" />
