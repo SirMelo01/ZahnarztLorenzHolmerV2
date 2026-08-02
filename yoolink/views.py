@@ -91,18 +91,24 @@ def load_index(request):
     context["praxisText"] = _get_text("main_praxis")
     context["heroImage"] = _get_image("main_hero")
     if context["praxisText"]:
+        context["hasPraxisText"] = True
         context["praxisTitle"] = context["praxisText"].title
         context["praxisBeschreibung"] = context["praxisText"].description
 
     services = []
+    before_after_services = {3, 4, 6}
     for index in range(1, 8):
         services.append(
             {
                 "index": index,
-                "single_image_only": index <= 2,
+                "single_image_only": index not in before_after_services,
                 "text": _get_text(f"main_service_{index}"),
                 "prev_image": _get_image(f"main_service_{index}_prev"),
-                "after_image": None if index <= 2 else _get_image(f"main_service_{index}_after"),
+                "after_image": (
+                    _get_image(f"main_service_{index}_after")
+                    if index in before_after_services
+                    else None
+                ),
                 "icon": _get_image(f"main_service_{index}_icon"),
             }
         )

@@ -88,11 +88,11 @@
             <div class="flex flex-col items-center space-x-4 mb-6 justify-center">
                 <img src="{% if service.icon %}{{ service.icon.file.url }}{% else %}{% static 'images/Icons Behandlungen/Prophylaxe.png' %}{% endif %}" alt="{% if service.icon and service.icon.title %}{{ service.icon.title }}{% else %}Icon{% endif%}" class="w-14 h-14 mb-4">
                 <h3 class="text-3xl font-semibold text-[#262C5D]">
-                    {{ service.text.title|default:"Service Title" }}
+                    {% if service.text %}{{ service.text.title }}{% else %}Service Title{% endif %}
                 </h3>
             </div>
             <p class="text-gray-600">
-                {{ service.text.description|default:"Default description text for the service." }}
+                {% if service.text %}{{ service.text.description }}{% else %}Default description text for the service.{% endif %}
             </p>
         </div>
     </div>
@@ -107,8 +107,8 @@
     <div class="absolute top-0 w-full h-20 bg-gradient-to-b from-white to-gray-100"></div>
     <div class="max-w-6xl mx-auto px-4 text-center mt-8">
         <!-- Title -->
-        <h2 class="text-4xl font-semibold text-[#262C5D]">{% if praxisTitle %}{{praxisTitle}}{% else %}Unsere Praxis{% endif %}</h2>
-        <p class="mt-4 text-gray-600 text-lg">{% if praxisBeschreibung %}{{praxisBeschreibung}}{% else %}Ein Einblick in
+        <h2 class="text-4xl font-semibold text-[#262C5D]">{% if hasPraxisText %}{{praxisTitle}}{% elif praxisTitle %}{{praxisTitle}}{% else %}Unsere Praxis{% endif %}</h2>
+        <p class="mt-4 text-gray-600 text-lg">{% if hasPraxisText %}{{praxisBeschreibung}}{% elif praxisBeschreibung %}{{praxisBeschreibung}}{% else %}Ein Einblick in
             unsere modernen Praxisräume, in denen wir uns um Ihr Wohlbefinden kümmern.{% endif %}</p>
     </div>
 
@@ -187,11 +187,11 @@
     <div class="max-w-6xl mx-auto px-4">
         <div class="flex flex-col gap-5 md:flex-row md:items-end md:justify-between">
             <div class="max-w-3xl">
-                <h2 class="text-4xl font-semibold text-[#262C5D]">{% if homeBlogText and homeBlogText.title %}{{ homeBlogText.title }}{% else %}Aktuelles aus der Zahnarztpraxis{% endif %}</h2>
-                <p class="mt-4 text-gray-600 text-lg">{% if homeBlogText and homeBlogText.description %}{{ homeBlogText.description }}{% else %}Tipps zur Zahngesundheit, Einblicke in moderne Behandlungen und Neuigkeiten aus unserer Praxis.{% endif %}</p>
+                <h2 class="text-4xl font-semibold text-[#262C5D]">{% if homeBlogText %}{{ homeBlogText.title }}{% else %}Aktuelles aus der Zahnarztpraxis{% endif %}</h2>
+                <p class="mt-4 text-gray-600 text-lg">{% if homeBlogText %}{{ homeBlogText.description }}{% else %}Tipps zur Zahngesundheit, Einblicke in moderne Behandlungen und Neuigkeiten aus unserer Praxis.{% endif %}</p>
             </div>
             <a href="{% url 'blog:blog' %}" class="inline-flex items-center justify-center rounded-lg bg-[#262C5D] px-6 py-3 font-semibold text-white shadow-md shadow-[#262C5D] transition hover:bg-slate-900">
-                {% if homeBlogText and homeBlogText.buttonText %}{{ homeBlogText.buttonText }}{% else %}Alle Artikel ansehen{% endif %}
+                {% if homeBlogText %}{{ homeBlogText.buttonText }}{% else %}Alle Artikel ansehen{% endif %}
             </a>
         </div>
 

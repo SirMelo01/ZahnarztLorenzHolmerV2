@@ -101,21 +101,21 @@
                     <div>
                         <label class="mb-1 block text-sm font-medium text-gray-600">Name / Header</label>
                         <input inputType="header" type="text" class="w-full rounded-lg border-2 border-gray-200 bg-gray-50 px-4 py-2 text-base font-semibold text-gray-900 focus:border-blue-500 focus:bg-white focus:outline-none"
-                            value="{{ hero_text.header|default:'Dr. med. dent. Lorenz Holmer' }}">
+                            value="{% if hero_text %}{{ hero_text.header }}{% else %}Dr. med. dent. Lorenz Holmer{% endif %}">
                     </div>
                     <div>
                         <label class="mb-1 block text-sm font-medium text-gray-600">Unterzeile</label>
                         <input inputType="title" type="text" class="w-full rounded-lg border-2 border-gray-200 bg-gray-50 px-4 py-2 text-base font-semibold text-gray-900 focus:border-blue-500 focus:bg-white focus:outline-none"
-                            value="{{ hero_text.title|default:'Ihr Zahnarzt in Plattling' }}">
+                            value="{% if hero_text %}{{ hero_text.title }}{% else %}Ihr Zahnarzt in Plattling{% endif %}">
                     </div>
                     <div>
                         <label class="mb-1 block text-sm font-medium text-gray-600">Beschreibung</label>
-                        <textarea inputType="description" rows="4" class="w-full rounded-lg border-2 border-gray-200 bg-gray-50 px-4 py-2 text-base leading-relaxed text-gray-800 focus:border-blue-500 focus:bg-white focus:outline-none">{{ hero_text.description|default:'Für Ihre Zähne' }}</textarea>
+                        <textarea inputType="description" rows="4" class="w-full rounded-lg border-2 border-gray-200 bg-gray-50 px-4 py-2 text-base leading-relaxed text-gray-800 focus:border-blue-500 focus:bg-white focus:outline-none">{% if hero_text %}{{ hero_text.description }}{% else %}Für Ihre Zähne{% endif %}</textarea>
                     </div>
                     <div>
                         <label class="mb-1 block text-sm font-medium text-gray-600">Button-Text</label>
                         <input inputType="buttonText" type="text" class="w-full rounded-lg border-2 border-gray-200 bg-gray-50 px-4 py-2 text-base font-medium text-gray-900 focus:border-blue-500 focus:bg-white focus:outline-none"
-                            value="{{ hero_text.buttonText|default:'Termin vereinbaren' }}">
+                            value="{% if hero_text %}{{ hero_text.buttonText }}{% else %}Termin vereinbaren{% endif %}">
                     </div>
                 </div>
 
@@ -148,11 +148,11 @@
                 <div>
                     <label class="mb-1 block text-sm font-medium text-gray-600">Überschrift</label>
                     <input inputType="title" type="text" class="w-full rounded-lg border-2 border-gray-200 bg-gray-50 px-4 py-2 text-base font-semibold text-gray-900 focus:border-blue-500 focus:bg-white focus:outline-none"
-                        value="{{ service_text.title|default:'Unsere Leistungen' }}">
+                        value="{% if service_text %}{{ service_text.title }}{% else %}Unsere Leistungen{% endif %}">
                 </div>
                 <div>
                     <label class="mb-1 block text-sm font-medium text-gray-600">Beschreibung</label>
-                    <textarea inputType="description" rows="3" class="w-full rounded-lg border-2 border-gray-200 bg-gray-50 px-4 py-2 text-base leading-relaxed text-gray-800 focus:border-blue-500 focus:bg-white focus:outline-none">{{ service_text.description|default:'Der wichtigste Pfeiler der modernen Zahnmedizin ist die Vorbeugung von Krankheiten wie Karies oder Parodontitis.' }}</textarea>
+                    <textarea inputType="description" rows="3" class="w-full rounded-lg border-2 border-gray-200 bg-gray-50 px-4 py-2 text-base leading-relaxed text-gray-800 focus:border-blue-500 focus:bg-white focus:outline-none">{% if service_text %}{{ service_text.description }}{% else %}Der wichtigste Pfeiler der modernen Zahnmedizin ist die Vorbeugung von Krankheiten wie Karies oder Parodontitis.{% endif %}</textarea>
                 </div>
             </div>
 
@@ -177,12 +177,12 @@
                                 <div class="min-w-0 flex-1">
                                     <label class="mb-1 block text-sm font-medium text-gray-600">Titel</label>
                                     <input inputType="title" type="text" class="w-full rounded-lg border-2 border-gray-200 bg-white px-4 py-2 text-base font-semibold text-gray-900 focus:border-blue-500 focus:outline-none"
-                                        value="{{ service.text.title|default:'Behandlung' }}">
+                                        value="{% if service.text %}{{ service.text.title }}{% else %}Behandlung{% endif %}">
                                 </div>
                             </div>
                             <div>
                                 <label class="mb-1 block text-sm font-medium text-gray-600">Beschreibung</label>
-                                <textarea inputType="description" rows="6" class="w-full rounded-lg border-2 border-gray-200 bg-white px-4 py-2 text-sm leading-relaxed text-gray-800 focus:border-blue-500 focus:outline-none">{{ service.text.description|default:'Beschreibung der Behandlung.' }}</textarea>
+                                <textarea inputType="description" rows="6" class="w-full rounded-lg border-2 border-gray-200 bg-white px-4 py-2 text-sm leading-relaxed text-gray-800 focus:border-blue-500 focus:outline-none">{% if service.text %}{{ service.text.description }}{% else %}Beschreibung der Behandlung.{% endif %}</textarea>
                             </div>
                         </div>
 
@@ -234,11 +234,11 @@
                     <div>
                         <label class="mb-1 block text-sm font-medium text-gray-600">Überschrift</label>
                         <input inputType="title" type="text" class="w-full rounded-lg border-2 border-gray-200 bg-gray-50 px-4 py-2 text-base font-semibold text-gray-900 focus:border-blue-500 focus:bg-white focus:outline-none"
-                            value="{{ praxis_text.title|default:'Unsere Praxis' }}">
+                            value="{% if praxis_text %}{{ praxis_text.title }}{% else %}Unsere Praxis{% endif %}">
                     </div>
                     <div>
                         <label class="mb-1 block text-sm font-medium text-gray-600">Beschreibung</label>
-                        <textarea inputType="description" rows="5" class="w-full rounded-lg border-2 border-gray-200 bg-gray-50 px-4 py-2 text-base leading-relaxed text-gray-800 focus:border-blue-500 focus:bg-white focus:outline-none">{{ praxis_text.description|default:'Ein Einblick in unsere modernen Praxisräume.' }}</textarea>
+                        <textarea inputType="description" rows="5" class="w-full rounded-lg border-2 border-gray-200 bg-gray-50 px-4 py-2 text-base leading-relaxed text-gray-800 focus:border-blue-500 focus:bg-white focus:outline-none">{% if praxis_text %}{{ praxis_text.description }}{% else %}Ein Einblick in unsere modernen Praxisräume.{% endif %}</textarea>
                     </div>
                 </div>
 
@@ -281,7 +281,7 @@
                     <div>
                         <label class="mb-1 block text-sm font-medium text-gray-600">Überschrift</label>
                         <input inputType="title" type="text" class="w-full rounded-lg border-2 border-gray-200 bg-gray-50 px-4 py-2 text-base font-semibold text-gray-900 focus:border-blue-500 focus:bg-white focus:outline-none"
-                            value="{{ team_text.title|default:'Team' }}">
+                            value="{% if team_text %}{{ team_text.title }}{% else %}Team{% endif %}">
                     </div>
                     <div>
                         <label class="mb-1 block text-sm font-medium text-gray-600">Beschreibung</label>
@@ -308,16 +308,16 @@
                     <div>
                         <label class="mb-1 block text-sm font-medium text-gray-600">Überschrift</label>
                         <input inputType="title" type="text" class="w-full rounded-lg border-2 border-gray-200 bg-gray-50 px-4 py-2 text-base font-semibold text-gray-900 focus:border-blue-500 focus:bg-white focus:outline-none"
-                            value="{{ blog_text.title|default:'Aktuelles aus der Zahnarztpraxis' }}">
+                            value="{% if blog_text %}{{ blog_text.title }}{% else %}Aktuelles aus der Zahnarztpraxis{% endif %}">
                     </div>
                     <div>
                         <label class="mb-1 block text-sm font-medium text-gray-600">Beschreibung</label>
-                        <textarea inputType="description" rows="5" class="w-full rounded-lg border-2 border-gray-200 bg-gray-50 px-4 py-2 text-base leading-relaxed text-gray-800 focus:border-blue-500 focus:bg-white focus:outline-none">{{ blog_text.description|default:'Tipps zur Zahngesundheit, Einblicke in moderne Behandlungen und Neuigkeiten aus unserer Praxis.' }}</textarea>
+                        <textarea inputType="description" rows="5" class="w-full rounded-lg border-2 border-gray-200 bg-gray-50 px-4 py-2 text-base leading-relaxed text-gray-800 focus:border-blue-500 focus:bg-white focus:outline-none">{% if blog_text %}{{ blog_text.description }}{% else %}Tipps zur Zahngesundheit, Einblicke in moderne Behandlungen und Neuigkeiten aus unserer Praxis.{% endif %}</textarea>
                     </div>
                     <div>
                         <label class="mb-1 block text-sm font-medium text-gray-600">Button-Text</label>
                         <input inputType="buttonText" type="text" class="w-full rounded-lg border-2 border-gray-200 bg-gray-50 px-4 py-2 text-base font-medium text-gray-900 focus:border-blue-500 focus:bg-white focus:outline-none"
-                            value="{{ blog_text.buttonText|default:'Alle Artikel ansehen' }}">
+                            value="{% if blog_text %}{{ blog_text.buttonText }}{% else %}Alle Artikel ansehen{% endif %}">
                     </div>
                 </div>
 
@@ -339,11 +339,11 @@
                 <div>
                     <label class="mb-1 block text-sm font-medium text-gray-600">Überschrift</label>
                     <input inputType="title" type="text" class="w-full rounded-lg border-2 border-gray-200 bg-gray-50 px-4 py-2 text-base font-semibold text-gray-900 focus:border-blue-500 focus:bg-white focus:outline-none"
-                        value="{{ contact_text.title|default:'Unsere Kontakte' }}">
+                        value="{% if contact_text %}{{ contact_text.title }}{% else %}Unsere Kontakte{% endif %}">
                 </div>
                 <div>
                     <label class="mb-1 block text-sm font-medium text-gray-600">Beschreibung</label>
-                    <textarea inputType="description" rows="4" class="w-full rounded-lg border-2 border-gray-200 bg-gray-50 px-4 py-2 text-base leading-relaxed text-gray-800 focus:border-blue-500 focus:bg-white focus:outline-none">{{ contact_text.description|default:'Wir stehen Ihnen jederzeit zur Verfügung, um Fragen zu beantworten und Termine zu vereinbaren.' }}</textarea>
+                    <textarea inputType="description" rows="4" class="w-full rounded-lg border-2 border-gray-200 bg-gray-50 px-4 py-2 text-base leading-relaxed text-gray-800 focus:border-blue-500 focus:bg-white focus:outline-none">{% if contact_text %}{{ contact_text.description }}{% else %}Wir stehen Ihnen jederzeit zur Verfügung, um Fragen zu beantworten und Termine zu vereinbaren.{% endif %}</textarea>
                 </div>
             </div>
         </section>
@@ -362,7 +362,7 @@
                     <div>
                         <label class="mb-1 block text-sm font-medium text-gray-600">Überschrift</label>
                         <input inputType="title" type="text" class="w-full rounded-lg border-2 border-gray-200 bg-gray-50 px-4 py-2 text-base font-semibold text-gray-900 focus:border-blue-500 focus:bg-white focus:outline-none"
-                            value="{{ faq_text.title|default:'FAQs' }}">
+                            value="{% if faq_text %}{{ faq_text.title }}{% else %}FAQs{% endif %}">
                     </div>
                     <div>
                         <label class="mb-1 block text-sm font-medium text-gray-600">Beschreibung</label>
@@ -397,7 +397,7 @@
                 <div>
                     <label class="mb-1 block text-sm font-medium text-gray-600">Button-Text</label>
                     <input inputType="buttonText" type="text" class="w-full rounded-lg border-2 border-gray-200 bg-gray-50 px-4 py-2 text-base font-medium text-gray-900 focus:border-blue-500 focus:bg-white focus:outline-none"
-                        value="{{ footer_text.buttonText|default:'Termin vereinbaren' }}">
+                        value="{% if footer_text %}{{ footer_text.buttonText }}{% else %}Termin vereinbaren{% endif %}">
                 </div>
             </div>
         </section>

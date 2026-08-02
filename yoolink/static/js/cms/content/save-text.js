@@ -60,7 +60,7 @@ $(document).ready(function () {
                  * buttonText -> Button Text
                  */
 
-                if (inputType && inputType.trim() !== '' && inputValue.trim() !== '') {
+                if (inputType && inputType.trim() !== '') {
                     inputList[inputType] = inputValue;
                 }
             });

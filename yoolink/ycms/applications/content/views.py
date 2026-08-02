@@ -72,14 +72,19 @@ def site_view_main(request):
     }
 
     services = []
+    before_after_services = {3, 4, 6}
     for index in range(1, 8):
         services.append(
             {
                 "index": index,
-                "single_image_only": index <= 2,
+                "single_image_only": index not in before_after_services,
                 "text": _get_text(f"main_service_{index}"),
                 "prev_image": _get_image(f"main_service_{index}_prev"),
-                "after_image": None if index <= 2 else _get_image(f"main_service_{index}_after"),
+                "after_image": (
+                    _get_image(f"main_service_{index}_after")
+                    if index in before_after_services
+                    else None
+                ),
                 "icon": _get_image(f"main_service_{index}_icon"),
             }
         )
@@ -634,12 +639,10 @@ def save_text_content(request):
             return result
 
     if name not in custom_keys:
-        values = {
-            "header": request.POST.get("header", ""),
-            "title": request.POST.get("title", ""),
-            "description": request.POST.get("description", ""),
-            "buttonText": request.POST.get("buttonText", ""),
-        }
+        values = {}
+        for field in ["header", "title", "description", "buttonText"]:
+            if field in request.POST:
+                values[field] = request.POST.get(field, "")
         result = _save_text_values(name, values, lang)
         if result is not None:
             return result
@@ -734,20 +737,21 @@ def _assign_button_slots(buttons, lang):
 
 
 def _save_text_values(name, values, lang):
+    if not name or not values:
+        return None
+
     try:
         with transaction.atomic():
-            text_content, created = TextContent.objects.get_or_create(name=name)
+            text_content, _ = TextContent.objects.get_or_create(name=name)
 
         for field in ["header", "title", "description", "buttonText"]:
-            value = values.get(field, "")
-            if created or value:
-                setattr(text_content, f"{field}_{lang}", value)
+            if field in values:
+                setattr(text_content, f"{field}_{lang}", values.get(field, ""))
 
         if lang == DEFAULT_LANGUAGE:
             for field in ["header", "title", "description", "buttonText"]:
-                value = values.get(field, "")
-                if created or value:
-                    setattr(text_content, field, value)
+                if field in values:
+                    setattr(text_content, field, values.get(field, ""))
 
         text_content.save()
     except IntegrityError:
