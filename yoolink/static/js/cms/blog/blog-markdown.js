@@ -709,6 +709,9 @@
         const originalText = $button.text();
         const formData = new FormData();
         formData.append('file', file);
+        if ($('#markdownImageSkipOptimization').is(':checked')) {
+            formData.append('skip_optimization', '1');
+        }
 
         $button.prop('disabled', true).text('Lädt...');
         $.ajax({

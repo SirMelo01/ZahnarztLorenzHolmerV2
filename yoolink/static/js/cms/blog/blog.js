@@ -209,6 +209,9 @@ function uploadBlogImage(file) {
 
     const formData = new FormData();
     formData.append('file', file);
+    if ($('#blogImageSkipOptimization').is(':checked')) {
+        formData.append('skip_optimization', '1');
+    }
     $('#blogImageUploadFileName').text(file.name);
     $('#blogImageUploadQueue').removeClass('hidden').text('Upload läuft...');
 
@@ -227,7 +230,7 @@ function uploadBlogImage(file) {
                 selectBlogImage(response.image);
                 renderBlogImageLibrary(blogImageLibraryItems);
                 setBlogImagePanel('blogImageLibraryPanel');
-                $('#blogImageUploadQueue').text(response.image.note || 'Bild wurde hochgeladen.');
+                $('#blogImageUploadQueue').text((response.image.optimization && response.image.optimization.note) || 'Bild wurde hochgeladen.');
                 sendNotif('Bild wurde hochgeladen', 'success');
             } else {
                 loadBlogImageLibrary(false);

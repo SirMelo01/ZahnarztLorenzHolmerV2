@@ -5,6 +5,16 @@
 {% load compress static %}
 <script src="{% static 'js/libs/dropzone.min.js' %}"></script>
 <link rel="stylesheet" href="{% static 'css/cms/libs/dropzone.min.css' %}" type="text/css" />
+<script>
+  Dropzone.options.myDropzone = {
+    sending: function(file, xhr, formData) {
+      var skipOptimization = document.getElementById('gallerySkipOptimization');
+      if (skipOptimization && skipOptimization.checked) {
+        formData.append('skip_optimization', '1');
+      }
+    }
+  };
+</script>
 {% endblock %}
 {% block content %}
 
@@ -106,7 +116,12 @@
     </div>
   </form>
 
-  <form action="upload/" method="POST" class="dropzone mt-8" id="my-dropzone">
+  <label class="mt-6 inline-flex items-center gap-2 text-xs text-slate-500">
+    <input id="gallerySkipOptimization" type="checkbox" class="h-3.5 w-3.5 rounded border-slate-300 text-blue-600 focus:ring-blue-500">
+    Ohne Komprimierung hochladen
+  </label>
+
+  <form action="upload/" method="POST" class="dropzone mt-3" id="my-dropzone">
     {% csrf_token %}
     <div class="fallback">
       <input name="file" type="file" multiple />

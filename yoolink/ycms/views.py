@@ -241,17 +241,9 @@ def cms(request):
                 except ValidationError as error:
                     context['last'] = validation_error_message(error)
                     break
-                desktop_image = optimize_image_for_upload(
+                desktop_image, mobile_image = prepare_cms_upload_images(
                     file,
-                    max_dimensions=DESKTOP_IMAGE_MAX_DIMENSIONS,
-                    max_size_kb=DESKTOP_IMAGE_TARGET_KB,
-                    variant_suffix="desktop",
-                )
-                mobile_image = optimize_image_for_upload(
-                    file,
-                    max_dimensions=MOBILE_IMAGE_MAX_DIMENSIONS,
-                    max_size_kb=MOBILE_IMAGE_TARGET_KB,
-                    variant_suffix="mobile",
+                    skip_optimization=skip_image_optimization_requested(request),
                 )
                 new_file = fileentry(
                     file=desktop_image,
@@ -637,19 +629,17 @@ def file_upload_view(request):
         except ValidationError as error:
             return upload_validation_error_response(error)
 
-        desktop_image = optimize_image_for_upload(
+        skip_optimization = skip_image_optimization_requested(request)
+        desktop_image, mobile_image = prepare_cms_upload_images(
             my_file,
-            max_dimensions=DESKTOP_IMAGE_MAX_DIMENSIONS,
-            max_size_kb=DESKTOP_IMAGE_TARGET_KB,
-            variant_suffix="desktop",
+            skip_optimization=skip_optimization,
         )
-        mobile_image = optimize_image_for_upload(
+        optimization = image_optimization_metadata(
             my_file,
-            max_dimensions=MOBILE_IMAGE_MAX_DIMENSIONS,
-            max_size_kb=MOBILE_IMAGE_TARGET_KB,
-            variant_suffix="mobile",
+            desktop_image,
+            mobile_image,
+            skipped=skip_optimization,
         )
-        optimization = image_optimization_metadata(my_file, desktop_image, mobile_image)
 
         image = fileentry.objects.create(
             file=desktop_image,
@@ -863,6 +853,17 @@ def original_uploaded_image(image, variant_suffix):
     return uploaded_image(buffer, image, variant_suffix, extension, content_type)
 
 
+def upload_flag_enabled(value):
+    return str(value or "").strip().lower() in {"1", "true", "yes", "on"}
+
+
+def skip_image_optimization_requested(request):
+    return any(
+        upload_flag_enabled(request.POST.get(field))
+        for field in ("skip_optimization", "skip_compression", "no_compression")
+    )
+
+
 def filesize_kb(size):
     return int(round((size or 0) / 1024))
 
@@ -986,6 +987,31 @@ def optimize_image_for_upload(
     return optimized
 
 
+def prepare_cms_upload_images(image, skip_optimization=False):
+    if skip_optimization:
+        return original_uploaded_image(image, "original"), None
+
+    desktop_image = optimize_image_for_upload(
+        image,
+        max_dimensions=DESKTOP_IMAGE_MAX_DIMENSIONS,
+        max_size_kb=DESKTOP_IMAGE_TARGET_KB,
+        variant_suffix="desktop",
+    )
+    mobile_image = optimize_image_for_upload(
+        image,
+        max_dimensions=MOBILE_IMAGE_MAX_DIMENSIONS,
+        max_size_kb=MOBILE_IMAGE_TARGET_KB,
+        variant_suffix="mobile",
+    )
+    return desktop_image, mobile_image
+
+
+def prepare_galery_upload_image(image, skip_optimization=False):
+    if skip_optimization:
+        return original_uploaded_image(image, "original")
+    return optimize_image_for_upload(image)
+
+
 def resize_image(image):
     return optimize_image_for_upload(image, variant_suffix="desktop")
 
@@ -1074,30 +1100,33 @@ def convert_image_entry_to_webp(entry):
     return converted_count, skipped_count
 
 
-def image_optimization_metadata(original, desktop_image, mobile_image):
+def image_optimization_metadata(original, desktop_image, mobile_image=None, skipped=False):
     original_size = getattr(original, "size", 0)
     desktop_saved_bytes = original_size - desktop_image.size
-    mobile_saved_bytes = original_size - mobile_image.size
+    mobile_saved_bytes = original_size - mobile_image.size if mobile_image else 0
     desktop_saved_percent = round((desktop_saved_bytes / original_size) * 100) if original_size else 0
-    mobile_saved_percent = round((mobile_saved_bytes / original_size) * 100) if original_size else 0
+    mobile_saved_percent = round((mobile_saved_bytes / original_size) * 100) if original_size and mobile_image else 0
 
     original_format = os.path.splitext(getattr(original, "name", ""))[1].lstrip(".").upper()
     desktop_format = os.path.splitext(desktop_image.name)[1].lstrip(".").upper()
 
     note = "Bild wurde als WebP für Web und Mobil optimiert."
-    if original_format == "GIF" and desktop_format == "GIF":
+    if skipped:
+        note = "Bild wurde ohne Komprimierung im Originalformat gespeichert."
+    elif original_format == "GIF" and desktop_format == "GIF":
         note = "Animierte GIFs bleiben im Originalformat, damit die Animation erhalten bleibt."
 
     return {
         "original_size": original_size,
         "original_size_kb": filesize_kb(original_size),
         "desktop": image_variant_metadata(desktop_image),
-        "mobile": image_variant_metadata(mobile_image),
+        "mobile": image_variant_metadata(mobile_image) if mobile_image else {},
         "desktop_saved_bytes": desktop_saved_bytes,
         "desktop_saved_percent": desktop_saved_percent,
         "mobile_saved_bytes": mobile_saved_bytes,
         "mobile_saved_percent": mobile_saved_percent,
         "note": note,
+        "skipped": skipped,
     }
 
 from django.utils.translation import get_language_from_request, activate
@@ -1733,7 +1762,10 @@ def upload_galery_img(request, id):
         except ValidationError as error:
             return upload_validation_error_response(error)
 
-        optimized_image = optimize_image_for_upload(my_file)
+        optimized_image = prepare_galery_upload_image(
+            my_file,
+            skip_optimization=skip_image_optimization_requested(request),
+        )
         doc = GaleryImage.objects.create(upload=optimized_image)
         galery = Galerie.objects.get(id=id)
         galery.images.add(doc)

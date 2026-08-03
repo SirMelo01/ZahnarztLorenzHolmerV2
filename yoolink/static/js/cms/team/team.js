@@ -507,6 +507,9 @@ function uploadTeamImageFiles(fileList, csrfToken) {
 
         const formData = new FormData();
         formData.append('file', file);
+        if ($('#imageUploadSkipOptimization').is(':checked')) {
+            formData.append('skip_optimization', '1');
+        }
 
         $.ajax({
             url: '/cms/upload/post',
@@ -569,7 +572,8 @@ function teamUploadOptimizationText(image) {
     const mobile = optimization.mobile || {};
     const desktopSaved = optimization.desktop_saved_percent > 0 ? ` / -${optimization.desktop_saved_percent}%` : '';
     const mobileSaved = optimization.mobile_saved_percent > 0 ? ` / -${optimization.mobile_saved_percent}%` : '';
-    return `Original ${optimization.original_size_kb || 0} KB | Desktop ${desktop.size_kb || 0} KB${desktopSaved} | Mobil ${mobile.size_kb || 0} KB${mobileSaved}`;
+    const mobileText = optimization.skipped ? 'Keine mobile Variante' : `Mobil ${mobile.size_kb || 0} KB${mobileSaved}`;
+    return `Original ${optimization.original_size_kb || 0} KB | Desktop ${desktop.size_kb || 0} KB${desktopSaved} | ${mobileText}`;
 }
 
 function escapeTeamImageHtml(value) {

@@ -265,6 +265,34 @@ def test_image_upload_returns_uploaded_image_metadata(logged_in_client):
     image.file.close()
 
 
+def test_image_upload_can_skip_optimization(logged_in_client):
+    buffer = BytesIO()
+    Image.new("RGB", (40, 30), color=(220, 60, 40)).save(buffer, format="JPEG")
+    original_bytes = buffer.getvalue()
+
+    response = logged_in_client.post(
+        reverse("ycms:post-upload"),
+        {
+            "file": SimpleUploadedFile("original-photo.jpg", original_bytes, content_type="image/jpeg"),
+            "skip_optimization": "1",
+        },
+    )
+
+    assert response.status_code == 200
+    payload = response.json()
+    image = fileentry.objects.get(id=payload["image"]["id"])
+    assert image.file.name.endswith(".jpg")
+    assert not image.mobile_file
+    assert payload["image"]["mobile_url"] == ""
+    assert payload["image"]["srcset"] == ""
+    assert payload["image"]["has_mobile"] is False
+    assert payload["image"]["optimization"]["skipped"] is True
+
+    image.file.open("rb")
+    assert image.file.read() == original_bytes
+    image.file.close()
+
+
 def test_large_png_without_transparency_is_converted_for_smaller_delivery(logged_in_client):
     source = Image.new("RGB", (700, 700))
     rng = random.Random(42)
