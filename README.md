@@ -303,3 +303,6 @@ docker compose -f production.yml up
 ## Hinweise
 
 Interne Python/Django-Namen wie `yoolink`, `ycms` und `config` bleiben bewusst bestehen, damit Migrations, App Labels und Imports stabil bleiben.
+
+
+ssh -i ~/.ssh/id_ed25519_strato root@85.215.35.177
