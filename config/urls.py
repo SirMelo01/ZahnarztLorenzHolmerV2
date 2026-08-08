@@ -9,7 +9,7 @@ from django.views.generic import TemplateView
 from drf_spectacular.views import SpectacularAPIView, SpectacularSwaggerView
 from rest_framework.authtoken.views import obtain_auth_token
 
-from yoolink.sitemaps import StaticViewSitemap
+from yoolink.sitemaps import BlogSitemap, StaticViewSitemap
 from yoolink.views import (
     cookies_view,
     datenschutz_view,
@@ -19,6 +19,7 @@ from yoolink.views import (
 
 sitemaps = {
     "static": StaticViewSitemap,
+    "blog": BlogSitemap,
 }
 
 urlpatterns = [
