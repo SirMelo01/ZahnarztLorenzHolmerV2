@@ -28,6 +28,14 @@ def _get_image(place):
     return fileentry.objects.filter(place=place).first()
 
 
+def _google_maps_query():
+    """Suchbegriff fuer den Maps-Embed (place-Modus): Praxisname + Anschrift."""
+    owner = WebsiteSettings.get_solo()
+    parts = [owner.company_name or owner.owner_name, owner.address]
+    query = ", ".join(part.strip() for part in parts if part and part.strip())
+    return query or "Zahnarztpraxis Dr. Lorenz Holmer, Deggendorfer Str. 50A, 94447 Plattling"
+
+
 def get_opening_hours():
     website_settings = WebsiteSettings.get_solo()
     context = {
@@ -79,6 +87,7 @@ def load_index(request):
         "FAQ": FAQ.objects.all(),
         "form": ContactForm(),
         "google_maps_embed_api_key": settings.GOOGLE_MAPS_EMBED_API_KEY,
+        "google_maps_query": _google_maps_query(),
         "service_range": range(1, 8),
     }
 

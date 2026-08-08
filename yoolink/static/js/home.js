@@ -41,47 +41,9 @@ $(document).ready(function() {
     
   });
 
-/*setTimeout(() => {
-  if (cookiemapselect !== null && cookiemapselect !== "false") {
-    let map = L.map("map");
-    map.on("focus", function () {
-      map.scrollWheelZoom.enable();
-    });
-    map.on("blur", function () {
-      map.scrollWheelZoom.disable();
-    });
-  }
-  
-}, 500);*/
-
-mapLoad();
+// Die Google-Maps-Karte wird nicht mehr hier gebaut: Das <iframe> steht mit
+// data-cookie-src im Template und wird zentral von loadinit.js ein-/ausgeblendet
+// (gleiches Muster wie auf allen anderen Seiten mit externen Embeds).
 
 });
-
-
-
-function mapLoad() {
-  if (cookiemapselect === null || cookiemapselect === "false") {
-    $('#covermap').removeClass('hidden');
-    $('#map').addClass('hidden');
-  } else {
-    $('#covermap').addClass('hidden');
-    const $map = $('#map');
-    const mapSrc = $map.data('mapSrc');
-
-    if (!mapSrc) {
-      $('#covermap').removeClass('hidden');
-      $map.addClass('hidden');
-      return;
-    }
-
-    $map.removeClass('hidden').empty();
-
-    const iframe = document.createElement('iframe');
-    iframe.className = 'w-full h-full rounded-lg shadow-lg';
-    iframe.src = mapSrc;
-    iframe.allowFullscreen = true;
-    $map.append(iframe);
-  }
-}
 
