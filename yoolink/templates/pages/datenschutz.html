@@ -7,7 +7,10 @@
 {% block content %}
 
 <style>
-h1 {
+/* Alle Regeln sind bewusst auf .datenschutz begrenzt: der Inhalt kann aus dem
+   CMS als rohes HTML kommen, ungescopte h1/h2/p-Regeln wuerden sonst auch
+   Navbar und Footer aus base.html treffen. */
+.datenschutz h1 {
   font-size: 1.875rem;
   font-weight: bold;
   text-align: center;
@@ -16,68 +19,68 @@ h1 {
 }
 
 @media (min-width: 640px) {
-  h1 {
+  .datenschutz h1 {
     font-size: 3rem;
   }
 }
 
-h2 {
+.datenschutz h2 {
   font-size: 1.5rem;
   color: #1f2937;
   padding-bottom: 0.75rem;
 }
 
 @media (min-width: 640px) {
-  h2 {
+  .datenschutz h2 {
     font-size: 2.25rem;
   }
 }
 
 /* H3 Styles */
-h3 {
+.datenschutz h3 {
   font-size: 1.25rem;
   color: #1f2937;
   padding-bottom: 0.5rem;
 }
 
 @media (min-width: 640px) {
-  h3 {
+  .datenschutz h3 {
     font-size: 1.875rem;
   }
 }
 
-h4 {
+.datenschutz h4 {
   font-size: 1rem;
   font-weight: bold;
   padding-bottom: 0.75rem;
 }
 
 @media (min-width: 640px) {
-  h4 {
+  .datenschutz h4 {
     font-size: 1.125rem;
   }
 }
 
-p {
+.datenschutz p {
   font-size: 1rem;
   color: #4b5563;
   padding-bottom: 1rem;
 }
 
 @media (min-width: 640px) {
-  p {
+  .datenschutz p {
     font-size: 1.125rem;
+  }
 }
 
-.alinks {
+.datenschutz .alinks {
   text-decoration: underline;
   color: #1e3a8a;
 }
-
 </style>
 
 
-<div class="container py-10 w-full mx-auto px-2 md:px-40">
+<div class="datenschutz container py-10 w-full mx-auto px-2 md:px-40">
 
 {% if use_policy and privacy_content_html %}
 {{ privacy_content_html|safe }}
@@ -93,9 +96,16 @@ p {
 
 <h2>3. Allgemeine Hinweise und Pflicht&shy;informationen</h2>
 <h3>Datenschutz</h3> <p>Die Betreiber dieser Seiten nehmen den Schutz Ihrer pers&ouml;nlichen Daten sehr ernst. Wir behandeln Ihre personenbezogenen Daten vertraulich und entsprechend den gesetzlichen Datenschutzvorschriften sowie dieser Datenschutzerkl&auml;rung.</p> <p>Wenn Sie diese Website benutzen, werden verschiedene personenbezogene Daten erhoben. Personenbezogene Daten sind Daten, mit denen Sie pers&ouml;nlich identifiziert werden k&ouml;nnen. Die vorliegende Datenschutzerkl&auml;rung erl&auml;utert, welche Daten wir erheben und wof&uuml;r wir sie nutzen. Sie erl&auml;utert auch, wie und zu welchem Zweck das geschieht.</p> <p>Wir weisen darauf hin, dass die Daten&uuml;bertragung im Internet (z.&nbsp;B. bei der Kommunikation per E-Mail) Sicherheitsl&uuml;cken aufweisen kann. Ein l&uuml;ckenloser Schutz der Daten vor dem Zugriff durch Dritte ist nicht m&ouml;glich.</p>
-<h3>Hinweis zur verantwortlichen Stelle</h3> <p>Die verantwortliche Stelle f&uuml;r die Datenverarbeitung auf dieser Website ist:</p> <p>{% if owner_data and owner_data.address %}{{owner_data.address}}{% else %}Deggendorfer Str. 50A 94447 Plattling{% endif %}</p>
+<h3>Hinweis zur verantwortlichen Stelle</h3> <p>Die verantwortliche Stelle f&uuml;r die Datenverarbeitung auf dieser Website ist:</p>
+{# Stammdaten kommen aus Einstellungen -> Unternehmensdaten (WebsiteSettings). #}
+<p>
+  {% if owner_data and owner_data.company_name %}{{ owner_data.company_name }}<br />{% else %}Zahnarztpraxis Dr. Lorenz Holmer<br />{% endif %}
+  {% if owner_data and owner_data.owner_name %}{{ owner_data.owner_name }}<br />{% endif %}
+  {% if owner_data and owner_data.address %}{{ owner_data.address|linebreaksbr }}{% else %}Deggendorfer Str. 50A, 94447 Plattling{% endif %}
+</p>
 
-<p>Telefon: {% if owner_data and owner_data.tel_number %}{{owner_data.tel_number}}{% else %}09931 2100{% endif %}<br />
+<p>Telefon: {% if owner_data and owner_data.tel_number %}{{owner_data.tel_number}}{% elif owner_data and owner_data.mobile_number %}{{owner_data.mobile_number}}{% else %}09931 2100{% endif %}<br />
+{% if owner_data and owner_data.fax_number %}Fax: {{ owner_data.fax_number }}<br />{% endif %}
 E-Mail: {% if owner_data and owner_data.email %}{{owner_data.email}}{% else %}info@dr-holmer.de{% endif %}</p>
  <p>Verantwortliche Stelle ist die nat&uuml;rliche oder juristische Person, die allein oder gemeinsam mit anderen &uuml;ber die Zwecke und Mittel der Verarbeitung von personenbezogenen Daten (z.&nbsp;B. Namen, E-Mail-Adressen o. &Auml;.) entscheidet.</p>
 
