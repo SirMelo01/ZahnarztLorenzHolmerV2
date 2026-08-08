@@ -115,7 +115,7 @@ Wichtige Production-Env-Werte in `.envs/.production/.django`:
 ```bash
 DJANGO_ALLOWED_HOSTS=zahnarzt-dr-holmer.de,www.zahnarzt-dr-holmer.de
 DJANGO_CSRF_TRUSTED_ORIGINS=https://zahnarzt-dr-holmer.de,https://www.zahnarzt-dr-holmer.de
-DJANGO_DEFAULT_FROM_EMAIL="Zahnarztpraxis Dr. Lorenz Holmer <noreply@zahnarzt-dr-holmer.de>"
+DJANGO_DEFAULT_FROM_EMAIL="Zahnarztpraxis Dr. Lorenz Holmer <noreply@yoolink.de>"
 DJANGO_EMAIL_SUBJECT_PREFIX="[Zahnarzt Holmer]"
 GOOGLE_MAPS_EMBED_API_KEY=
 
