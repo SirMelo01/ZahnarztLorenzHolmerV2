@@ -245,15 +245,17 @@
 
             <div class="relative h-[270px] md:h-[498px]">
                 {% if google_maps_embed_api_key %}
+                {% comment %}
+                referrerpolicy ist Pflicht: ohne das Attribut greift der globale Header
+                Referrer-Policy: same-origin (Django-Default), Google bekommt gar keinen
+                Referrer und weist den Key mit RefererNotAllowedMapError ab.
+                {% endcomment %}
                 <iframe id="map"
                         class="hidden w-full h-full rounded-lg shadow-lg"
                         style="border:0"
                         title="Google Maps – {{ owner_data.company_name|default:'Zahnarztpraxis Dr. Lorenz Holmer' }}"
                         loading="lazy"
                         allowfullscreen
-                        {# Ohne dieses Attribut greift der globale Header
-                           Referrer-Policy: same-origin (Django-Default) und Google
-                           bekommt gar keinen Referrer -> RefererNotAllowedMapError. #}
                         referrerpolicy="strict-origin-when-cross-origin"
                         data-cookie-src="https://www.google.com/maps/embed/v1/place?key={{ google_maps_embed_api_key|urlencode }}&amp;q={{ google_maps_query|urlencode }}&amp;zoom=15&amp;maptype=roadmap&amp;language=de&amp;region=DE"></iframe>
 
