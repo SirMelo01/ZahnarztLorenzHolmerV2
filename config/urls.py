@@ -14,7 +14,6 @@ from yoolink.views import (
     cookies_view,
     datenschutz_view,
     impressum_view,
-    kontaktform,
     load_index,
 )
 
@@ -42,7 +41,6 @@ urlpatterns += i18n_patterns(
     path("", view=load_index, name="home"),
     path("sitemap.xml", sitemap, {"sitemaps": sitemaps}, name="django.contrib.sitemaps.views.sitemap"),
     path("impressum/", view=impressum_view, name="impressum"),
-    path("kontakt/", view=kontaktform, name="kontakt"),
     path("datenschutz/", view=datenschutz_view, name="datenschutz"),
     path("cookies/", view=cookies_view, name="cookies"),
     path("blog/", include("yoolink.blog.urls", namespace="blog")),

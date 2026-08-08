@@ -39,6 +39,8 @@ $(document).ready(function () {
             mobile_number: $.trim($('#mobile_number').val()),
             website: $.trim($('#website').val()),
             address: $.trim($('#address').val()),
+            appointmentURL: $.trim($('#appointmentURL').val()),
+            emergencyURL: $.trim($('#emergencyURL').val()),
             social_instagram: $.trim($('#social_instagram').val()),
             social_x: $.trim($('#social_x').val()),
             social_facebook: $.trim($('#social_facebook').val()),

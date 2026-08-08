@@ -12,7 +12,6 @@ from yoolink.ycms.models import (
     Blog,
     FAQ,
     Galerie,
-    Message,
     OpeningHours,
     TeamMember,
     WebsiteSettings,
@@ -135,40 +134,6 @@ def load_index(request):
     context["latestBlogs"] = Blog.objects.filter(original__isnull=True, active=True).order_by("-date", "-id")[:3]
     context.update(get_opening_hours())
     return render(request, "pages/index.html", context=context)
-
-
-def kontaktform(request):
-    success = False
-    if request.method == "POST":
-        form = ContactForm(request.POST)
-        if form.is_valid():
-            Message.objects.create(
-                name=form.cleaned_data["name"],
-                email=form.cleaned_data["email"],
-                title=form.cleaned_data["title"],
-                message=form.cleaned_data["message"],
-            )
-            success = True
-    else:
-        form = ContactForm()
-
-    context = {
-        "form": form,
-        "success": success,
-        "textContent_hero": _get_text("main_kontakt_hero"),
-        "textContent_panel": _get_text("main_kontakt_panel"),
-        "textContent_panel_labels": _get_text("main_kontakt_panel_labels"),
-        "textContent_opening_hours": _get_text("main_kontakt_opening_hours"),
-        "textContent_response": _get_text("main_kontakt_response"),
-        "textContent_form": _get_text("main_kontakt_form"),
-        "textContent_fields": _get_text("main_kontakt_fields"),
-        "textContent_message_placeholder": _get_text("main_kontakt_message_placeholder"),
-        "textContent_success": _get_text("main_kontakt_success"),
-        "recaptcha_public_key": settings.RECAPTCHA_PUBLIC_KEY,
-        "google_maps_embed_api_key": settings.GOOGLE_MAPS_EMBED_API_KEY,
-    }
-    context.update(get_opening_hours())
-    return render(request, "pages/kontakt.html", context)
 
 
 def impressum_view(request):

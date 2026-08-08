@@ -28,11 +28,12 @@
                 </h2>
                 <p class="text-xl ml-10 md:ml-0 font-semibold text-blue-950">{% if heroText %}{{heroText.description}}{% else %}Für
                     Ihre Zähne{% endif %}</p>
-                <button
-                    class="mt-10 hidden md:inline-block text-sm bg-[#262C5D] text-white px-8 py-3 rounded-full shadow-md shadow-[#262C5D] transition-transform duration-300 ease-in-out hover:scale-105"
-                    onclick="window.location.href='{% if owner_data and owner_data.appointmentURL %}{{owner_data.appointmentURL}}{% else %}#{% endif %}';">
+                {% if owner_data and owner_data.appointmentURL %}
+                <a href="{{ owner_data.appointmentURL }}"
+                    class="mt-10 hidden md:inline-block text-sm bg-[#262C5D] text-white px-8 py-3 rounded-full shadow-md shadow-[#262C5D] transition-transform duration-300 ease-in-out hover:scale-105">
                     {% if heroText %}{{heroText.buttonText}}{% else %}Termin vereinbaren{% endif %}
-                </button>
+                </a>
+                {% endif %}
             </div>
         </div>
 
@@ -380,10 +381,12 @@
                         <h3 class="text-lg font-semibold mt-4 mb-2">Telefon:</h3>
                         <p class="text-gray-600 mb-6">{% if owner_data and owner_data.tel_number %}{{owner_data.tel_number}}{% else %}+123 6897 8974{% endif %}</p>
 
-                        <a href="{% if owner_data and owner_data.emergencyURL %}{{owner_data.emergencyURL}}{% else %}#{% endif %}"
+                        {% if owner_data and owner_data.emergencyURL %}
+                        <a href="{{ owner_data.emergencyURL }}"
                             class="bg-[#262C5D] text-white px-6 py-3 rounded-lg shadow hover:bg-slate-900">
                             Notdienst
                         </a>
+                        {% endif %}
                     </div>
                 </div>
 
@@ -400,17 +403,19 @@
                     <textarea id="message" name="message" placeholder="Nachricht" rows="4"
                         class="w-full p-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-[#262C5D]"></textarea>
                     <div class="flex justify-between md:justify-end md:space-x-6">
+                        {% if owner_data and owner_data.appointmentURL %}
                         <!-- "Termin vereinbaren" - Visible only on medium and larger screens -->
-                        <a href="{% if owner_data and owner_data.appointmentURL %}{{owner_data.appointmentURL}}{% else %}#{% endif %}"
+                        <a href="{{ owner_data.appointmentURL }}"
                             class="hidden md:inline-block bg-[#262C5D] text-white px-6 py-3 rounded-lg shadow hover:bg-slate-900">
                             Termin vereinbaren
                         </a>
 
                         <!-- "Termin" - Visible only on small screens -->
-                        <a href="{% if owner_data and owner_data.appointmentURL %}{{owner_data.appointmentURL}}{% else %}#{% endif %}"
+                        <a href="{{ owner_data.appointmentURL }}"
                               class=" block md:hidden bg-[#262C5D] text-white px-6 py-3 rounded-lg shadow hover:bg-slate-900">
                             Termin
                         </a>
+                        {% endif %}
                         {{ form.captcha }}
                         <!-- "Senden" - Always visible -->
                         <button id="bSendMail" type="submit" class="bg-[#262C5D] text-white px-6 py-3 rounded-lg shadow hover:bg-slate-900">

@@ -150,6 +150,26 @@
                                    placeholder="Unternehmensweg 2, 29299 Wohrt" />
                         </div>
 
+                        <div>
+                            <label class="mb-2 block text-sm font-medium text-slate-700" for="appointmentURL">Termin-URL</label>
+                            <input value="{{ website_settings.appointmentURL }}"
+                                   class="w-full rounded-2xl border border-slate-200 bg-slate-50 px-4 py-3 text-slate-700 outline-none transition focus:border-slate-400 focus:bg-white"
+                                   id="appointmentURL"
+                                   type="text"
+                                   placeholder="https://www.doctolib.de/..." />
+                            <p class="mt-1 text-xs text-slate-500">Ziel aller &bdquo;Termin vereinbaren&ldquo;-Buttons. Leer lassen blendet die Buttons aus.</p>
+                        </div>
+
+                        <div>
+                            <label class="mb-2 block text-sm font-medium text-slate-700" for="emergencyURL">Notdienst-URL</label>
+                            <input value="{{ website_settings.emergencyURL }}"
+                                   class="w-full rounded-2xl border border-slate-200 bg-slate-50 px-4 py-3 text-slate-700 outline-none transition focus:border-slate-400 focus:bg-white"
+                                   id="emergencyURL"
+                                   type="text"
+                                   placeholder="https://www.notdienst-zahn.de/..." />
+                            <p class="mt-1 text-xs text-slate-500">Ziel des &bdquo;Notdienst&ldquo;-Buttons. Leer lassen blendet den Button aus.</p>
+                        </div>
+
                         <div class="sm:col-span-2 xl:col-span-1">
                             <label class="mb-2 block text-sm font-medium text-slate-700" for="global_font">Globale Schriftart</label>
                             <select class="w-full rounded-2xl border border-slate-200 bg-slate-50 px-4 py-3 text-slate-700 outline-none transition focus:border-slate-400 focus:bg-white"

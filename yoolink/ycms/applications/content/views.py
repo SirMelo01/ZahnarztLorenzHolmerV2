@@ -578,25 +578,6 @@ def site_view_cookies(request):
 
 
 @login_required(login_url="login")
-def site_view_kontakt(request):
-    return render(
-        request,
-        "pages/cms/content/sites/KontaktSite.html",
-        {
-            "textContent_hero": _get_text("main_kontakt_hero"),
-            "textContent_panel": _get_text("main_kontakt_panel"),
-            "textContent_panel_labels": _get_text("main_kontakt_panel_labels"),
-            "textContent_opening_hours": _get_text("main_kontakt_opening_hours"),
-            "textContent_response": _get_text("main_kontakt_response"),
-            "textContent_form": _get_text("main_kontakt_form"),
-            "textContent_fields": _get_text("main_kontakt_fields"),
-            "textContent_message_placeholder": _get_text("main_kontakt_message_placeholder"),
-            "textContent_success": _get_text("main_kontakt_success"),
-        },
-    )
-
-
-@login_required(login_url="login")
 def site_view_blog_overview(request):
     lang = get_active_language(request)
     return render(
