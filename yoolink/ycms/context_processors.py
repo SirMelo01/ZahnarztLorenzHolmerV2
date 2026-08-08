@@ -16,6 +16,13 @@ def user_settings_context(request):
         context['site_schema_jsonld'] = build_site_schema_jsonld(owner_data)
     except Exception:
         context['site_schema_jsonld'] = ""
+
+    # Der Footer steht in base.html, wird also von jeder Seite gerendert - auch
+    # von Views, die get_opening_hours() nicht aufrufen (Blog, Login, 404/500).
+    # Deshalb gehoert footerText hierher und nicht in einzelne Views.
+    from yoolink.ycms.applications.content.models import TextContent
+
+    context['footerText'] = TextContent.objects.filter(name="footer").first()
     return context
 
 def cms_permissions_context(request):

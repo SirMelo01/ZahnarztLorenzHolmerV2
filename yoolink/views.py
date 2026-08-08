@@ -77,7 +77,7 @@ def get_opening_hours():
 
     context["opening_hours_rows"] = opening_hours_rows
     context["has_opening_hours"] = any(row["is_open"] for row in opening_hours_rows)
-    context["footerText"] = _get_text("footer")
+    # footerText kommt aus dem Context-Processor (gilt fuer alle Seiten inkl. Blog).
     return context
 
 

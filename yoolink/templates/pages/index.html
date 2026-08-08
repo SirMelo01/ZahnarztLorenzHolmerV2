@@ -158,8 +158,9 @@
 
 
 {% if teamText and teamText.title %}
-<section id="Team" class="md:py-14 relative scroll-my-8 md:-scroll-my-32">
-    <div class="max-w-6xl mx-auto px-4 text-center pt-14 pb-20 md:my-28">
+<section id="Team" class="py-14 md:py-20 relative scroll-my-8 md:-scroll-my-32">
+    {# pb-8: haelt die letzte Reihe aus dem 5rem hohen Verlauf am Sektionsende. #}
+    <div class="max-w-6xl mx-auto px-4 text-center pb-8">
         <!-- Title -->
         <h2 class="text-4xl font-semibold text-[#262C5D]">{% if teamText.title %}{{teamText.title}}{% endif %}</h2>
         <p class="mt-4 text-gray-600 text-lg">{% if teamText.description %}{{teamText.description}}{% endif %}</p>
