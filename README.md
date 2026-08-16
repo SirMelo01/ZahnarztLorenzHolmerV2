@@ -115,7 +115,7 @@ Wichtige Production-Env-Werte in `.envs/.production/.django`:
 ```bash
 DJANGO_ALLOWED_HOSTS=zahnarzt-dr-holmer.de,www.zahnarzt-dr-holmer.de
 DJANGO_CSRF_TRUSTED_ORIGINS=https://zahnarzt-dr-holmer.de,https://www.zahnarzt-dr-holmer.de
-DJANGO_DEFAULT_FROM_EMAIL="Zahnarztpraxis Dr. Lorenz Holmer <noreply@zahnarzt-dr-holmer.de>"
+DJANGO_DEFAULT_FROM_EMAIL="Zahnarztpraxis Dr. Lorenz Holmer <noreply@yoolink.de>"
 DJANGO_EMAIL_SUBJECT_PREFIX="[Zahnarzt Holmer]"
 GOOGLE_MAPS_EMBED_API_KEY=
 
@@ -303,3 +303,6 @@ docker compose -f production.yml up
 ## Hinweise
 
 Interne Python/Django-Namen wie `yoolink`, `ycms` und `config` bleiben bewusst bestehen, damit Migrations, App Labels und Imports stabil bleiben.
+
+
+ssh -i ~/.ssh/id_ed25519_strato root@85.215.35.177

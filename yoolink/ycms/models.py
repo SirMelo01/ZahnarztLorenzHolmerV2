@@ -374,6 +374,8 @@ class WebsiteSettings(models.Model):
     mobile_number = models.CharField(max_length=18, default="", blank=True)
     website = models.URLField(blank=True, default="")
     address = models.CharField(max_length=255, default="", blank=True)
+    appointmentURL = models.URLField(blank=True, default="")
+    emergencyURL = models.URLField(blank=True, default="")
     social_instagram = models.URLField(blank=True, default="")
     social_x = models.URLField(blank=True, default="")
     social_facebook = models.URLField(blank=True, default="")
@@ -1012,7 +1014,7 @@ class PageLink(models.Model):
     path = models.CharField(
         max_length=300,
         verbose_name="Seitenpfad",
-        help_text="Pfad der Seite, z.B. '/' oder '/kontakt/'"
+        help_text="Pfad der Seite, z.B. '/' oder '/impressum/'"
     )
     anchor = models.CharField(
         max_length=100,

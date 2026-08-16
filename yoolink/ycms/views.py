@@ -2099,6 +2099,8 @@ def user_settings_update(request):
     mobile_number = request.POST.get('mobile_number', '').strip()
     website = request.POST.get('website', '').strip()
     address = request.POST.get('address', '').strip()
+    appointment_url = request.POST.get('appointmentURL', '').strip()
+    emergency_url = request.POST.get('emergencyURL', '').strip()
     social_instagram = request.POST.get('social_instagram', '').strip()
     social_x = request.POST.get('social_x', '').strip()
     social_facebook = request.POST.get('social_facebook', '').strip()
@@ -2132,6 +2134,8 @@ def user_settings_update(request):
     website_settings.mobile_number = mobile_number
     website_settings.website = website
     website_settings.address = address
+    website_settings.appointmentURL = appointment_url
+    website_settings.emergencyURL = emergency_url
     website_settings.social_instagram = social_instagram
     website_settings.social_x = social_x
     website_settings.social_facebook = social_facebook
@@ -3580,7 +3584,7 @@ SITE_PAGE_SUGGESTIONS = [
     ("/kunden/", "Kunden"),
     ("/blog/", "Blog"),
     ("/shop/", "Shop"),
-    ("/kontakt/", "Kontakt"),
+    ("/#Kontakt", "Kontakt (Abschnitt auf der Startseite)"),
     ("/impressum/", "Impressum"),
     ("/datenschutz/", "Datenschutz"),
 ]

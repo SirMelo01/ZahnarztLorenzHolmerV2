@@ -28,11 +28,12 @@
                 </h2>
                 <p class="text-xl ml-10 md:ml-0 font-semibold text-blue-950">{% if heroText %}{{heroText.description}}{% else %}Für
                     Ihre Zähne{% endif %}</p>
-                <button
-                    class="mt-10 hidden md:inline-block text-sm bg-[#262C5D] text-white px-8 py-3 rounded-full shadow-md shadow-[#262C5D] transition-transform duration-300 ease-in-out hover:scale-105"
-                    onclick="window.location.href='{% if owner_data and owner_data.appointmentURL %}{{owner_data.appointmentURL}}{% else %}#{% endif %}';">
+                {% if owner_data and owner_data.appointmentURL %}
+                <a href="{{ owner_data.appointmentURL }}"
+                    class="mt-10 hidden md:inline-block text-sm bg-[#262C5D] text-white px-8 py-3 rounded-full shadow-md shadow-[#262C5D] transition-transform duration-300 ease-in-out hover:scale-105">
                     {% if heroText %}{{heroText.buttonText}}{% else %}Termin vereinbaren{% endif %}
-                </button>
+                </a>
+                {% endif %}
             </div>
         </div>
 
@@ -157,8 +158,9 @@
 
 
 {% if teamText and teamText.title %}
-<section id="Team" class="md:py-14 relative scroll-my-8 md:-scroll-my-32">
-    <div class="max-w-6xl mx-auto px-4 text-center pt-14 pb-20 md:my-28">
+<section id="Team" class="py-14 md:py-20 relative scroll-my-8 md:-scroll-my-32">
+    {# pb-8: haelt die letzte Reihe aus dem 5rem hohen Verlauf am Sektionsende. #}
+    <div class="max-w-6xl mx-auto px-4 text-center pb-8">
         <!-- Title -->
         <h2 class="text-4xl font-semibold text-[#262C5D]">{% if teamText.title %}{{teamText.title}}{% endif %}</h2>
         <p class="mt-4 text-gray-600 text-lg">{% if teamText.description %}{{teamText.description}}{% endif %}</p>
@@ -243,10 +245,22 @@
             <!-- Google Map -->
 
             <div class="relative h-[270px] md:h-[498px]">
-                <div id="map" class="h-full hidden"{% if google_maps_embed_api_key %} data-map-src="https://www.google.com/maps/embed/v1/place?key={{ google_maps_embed_api_key|urlencode }}&amp;zoom=14&amp;maptype=roadmap&amp;q=Dr.%20med.%20dent.%20Lorenz%20Holmer"{% endif %}>
-                </div>
-                
-                <div id="covermap" class="w-full h-[270px] md:h-[498px] rounded-lg shadow-lg hidden">
+                {% if google_maps_embed_api_key %}
+                {% comment %}
+                referrerpolicy ist Pflicht: ohne das Attribut greift der globale Header
+                Referrer-Policy: same-origin (Django-Default), Google bekommt gar keinen
+                Referrer und weist den Key mit RefererNotAllowedMapError ab.
+                {% endcomment %}
+                <iframe id="map"
+                        class="hidden w-full h-full rounded-lg shadow-lg"
+                        style="border:0"
+                        title="Google Maps – {{ owner_data.company_name|default:'Zahnarztpraxis Dr. Lorenz Holmer' }}"
+                        loading="lazy"
+                        allowfullscreen
+                        referrerpolicy="strict-origin-when-cross-origin"
+                        data-cookie-src="https://www.google.com/maps/embed/v1/place?key={{ google_maps_embed_api_key|urlencode }}&amp;q={{ google_maps_query|urlencode }}&amp;zoom=15&amp;maptype=roadmap&amp;language=de&amp;region=DE"></iframe>
+
+                <div id="covermap" data-cookie-placeholder class="w-full h-[270px] md:h-[498px] rounded-lg shadow-lg hidden">
                     <img class="h-full w-full object-cover brightness-75" src="{% static 'images/designImg/BlackandWhiteMap.png' %}" alt="Schwarzweiskarte" />
                     <div class="z-25 absolute w-full py-2.5 top-2.5 md:top-1/4 bottom-0.5 inset-x-0 text-white text-sm text-center leading-4 lg:text-lg md:text-base">
                     Inhalte von Google werden aufgrund deiner aktuellen Cookie-Einstellungen nicht angezeigt. Mehr dazu erfährst du in unserer
@@ -256,6 +270,14 @@
                     <a href="{% url 'cookies' %}" class="hover:bg-slate-500 hover:text-white hover:rounded-sm transition ease-linear duration-300 text-[#262C5D]">Cookie-Einstellungen</a>.
                     </div>
                 </div>
+                {% else %}
+                <div class="flex h-full w-full items-center justify-center rounded-lg bg-amber-50 px-6 shadow-lg">
+                    <div class="text-center">
+                        <p class="font-semibold text-amber-800">Google Maps API Key fehlt.</p>
+                        <p class="mt-1 text-sm text-amber-600">Bitte <strong>GOOGLE_MAPS_EMBED_API_KEY</strong> in der .env setzen.</p>
+                    </div>
+                </div>
+                {% endif %}
             </div>
             <!-- Contact Information -->
             <div class="flex flex-col">
@@ -362,10 +384,12 @@
                         <h3 class="text-lg font-semibold mt-4 mb-2">Telefon:</h3>
                         <p class="text-gray-600 mb-6">{% if owner_data and owner_data.tel_number %}{{owner_data.tel_number}}{% else %}+123 6897 8974{% endif %}</p>
 
-                        <a href="{% if owner_data and owner_data.emergencyURL %}{{owner_data.emergencyURL}}{% else %}#{% endif %}"
+                        {% if owner_data and owner_data.emergencyURL %}
+                        <a href="{{ owner_data.emergencyURL }}"
                             class="bg-[#262C5D] text-white px-6 py-3 rounded-lg shadow hover:bg-slate-900">
                             Notdienst
                         </a>
+                        {% endif %}
                     </div>
                 </div>
 
@@ -382,17 +406,19 @@
                     <textarea id="message" name="message" placeholder="Nachricht" rows="4"
                         class="w-full p-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-[#262C5D]"></textarea>
                     <div class="flex justify-between md:justify-end md:space-x-6">
+                        {% if owner_data and owner_data.appointmentURL %}
                         <!-- "Termin vereinbaren" - Visible only on medium and larger screens -->
-                        <a href="{% if owner_data and owner_data.appointmentURL %}{{owner_data.appointmentURL}}{% else %}#{% endif %}"
+                        <a href="{{ owner_data.appointmentURL }}"
                             class="hidden md:inline-block bg-[#262C5D] text-white px-6 py-3 rounded-lg shadow hover:bg-slate-900">
                             Termin vereinbaren
                         </a>
 
                         <!-- "Termin" - Visible only on small screens -->
-                        <a href="{% if owner_data and owner_data.appointmentURL %}{{owner_data.appointmentURL}}{% else %}#{% endif %}"
+                        <a href="{{ owner_data.appointmentURL }}"
                               class=" block md:hidden bg-[#262C5D] text-white px-6 py-3 rounded-lg shadow hover:bg-slate-900">
                             Termin
                         </a>
+                        {% endif %}
                         {{ form.captcha }}
                         <!-- "Senden" - Always visible -->
                         <button id="bSendMail" type="submit" class="bg-[#262C5D] text-white px-6 py-3 rounded-lg shadow hover:bg-slate-900">
