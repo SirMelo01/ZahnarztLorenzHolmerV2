@@ -94,7 +94,6 @@
         </button>
       </div>
 
-      {# Pro-Seite Auswahl (optional) #}
       <form method="get" class="flex items-center justify-between gap-2 sm:justify-start">
         <label class="text-sm text-gray-600">Pro Seite</label>
         <select name="per_page" class="rounded-md border-gray-300 text-sm"
@@ -191,7 +190,6 @@
             <span class="px-3 py-1 rounded-md border text-sm text-gray-400">‹ Zurück</span>
           {% endif %}
 
-          {# kompakte Seitenzahlen #}
           {% for num in page_obj.paginator.page_range %}
             {% if num == page_obj.number %}
               <span class="px-3 py-1 rounded-md bg-blue-500 text-white text-sm">{{ num }}</span>

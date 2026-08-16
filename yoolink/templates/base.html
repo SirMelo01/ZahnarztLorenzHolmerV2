@@ -7,18 +7,32 @@
   <meta http-equiv="x-ua-compatible" content="ie=edge">
   <title>{% block title %}Zahnarzt Dr. Lorenz Holmer{% endblock title %}</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="author" content="Zahnarztpraxis Dr. Lorenz Holmer">
-  
-  <meta name="description"
-    content="Dr. med. dent. Lorenz Holmer - Ihr Zahnarzt in Plattling im Landkreis Deggendorf. Moderne Zahnmedizin, Prophylaxe und einfühlsame Behandlung für die ganze Familie." />
-  <link rel="canonical" href="https://zahnarzt-dr-holmer.de{{ request.path }}">
+  <meta name="robots" content="{% block robots %}index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1{% endblock %}">
+  <meta name="author" content="{% if owner_data and owner_data.site_meta_author %}{{ owner_data.site_meta_author }}{% elif owner_data and owner_data.company_name %}{{ owner_data.company_name }}{% else %}Zahnarztpraxis Dr. Lorenz Holmer{% endif %}">
+  <meta name="description" content="{% block meta_description %}{% if owner_data and owner_data.site_meta_description %}{{ owner_data.site_meta_description }}{% else %}Dr. med. dent. Lorenz Holmer - Ihr Zahnarzt in Plattling im Landkreis Deggendorf. Moderne Zahnmedizin, Prophylaxe und einfühlsame Behandlung für die ganze Familie.{% endif %}{% endblock %}">
+
+  <link rel="canonical" href="{% block canonical_url %}https://zahnarzt-dr-holmer.de{{ request.path }}{% endblock %}">
 
   <link rel="icon" type="image/jpg" href="{% static 'images/Logo/Favicon.jpg' %}" sizes="200x200">
 
-  <meta property="og:type" content="website">
+  <!-- Open Graph -->
+  <meta property="og:type" content="{% block og_type %}website{% endblock %}">
   <meta property="og:title" content="{% block og_title %}Zahnarzt Dr. Lorenz Holmer - Plattling{% endblock %}">
   <meta property="og:description" content="{% block og_description %}Moderne Zahnarztpraxis in Plattling für Prophylaxe, Zahnerhalt und individuelle Zahnmedizin.{% endblock %}">
-  <meta property="og:url" content="https://zahnarzt-dr-holmer.de{{ request.path }}">
+  <meta property="og:image" content="{% block og_image %}https://zahnarzt-dr-holmer.de{% if owner_data and owner_data.logo %}{{ owner_data.logo.url }}{% else %}{% static 'images/Logo/Logo in Farbe komplett.png' %}{% endif %}{% endblock %}">
+  <meta property="og:url" content="{% block og_url %}https://zahnarzt-dr-holmer.de{{ request.path }}{% endblock %}">
+
+  <!-- Twitter / X -->
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="{% block twitter_title %}Zahnarzt Dr. Lorenz Holmer - Plattling{% endblock %}">
+  <meta name="twitter:description" content="{% block twitter_description %}Moderne Zahnarztpraxis in Plattling für Prophylaxe, Zahnerhalt und individuelle Zahnmedizin.{% endblock %}">
+  <meta name="twitter:image" content="{% block twitter_image %}https://zahnarzt-dr-holmer.de{% if owner_data and owner_data.logo %}{{ owner_data.logo.url }}{% else %}{% static 'images/Logo/Logo in Farbe komplett.png' %}{% endif %}{% endblock %}">
+
+  {% block extra_meta %}{% endblock %}
+
+  {% block structured_data %}{% endblock %}
+
+  {% if site_schema_jsonld %}<script type="application/ld+json">{{ site_schema_jsonld|safe }}</script>{% endif %}
 
   {% compress css inline %}
   <link href="{% static 'css/output.css' %}" rel="stylesheet">
