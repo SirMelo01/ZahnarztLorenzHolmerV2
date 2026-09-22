@@ -38,8 +38,8 @@ def build_default_code_from_html(body):
     return [
         {
             "name": "textArea",
-            "type": "p",
-            "attributes": {"class": "text-base my-4"},
+            "type": "div",
+            "attributes": {"class": "text-base my-4 rich-text"},
             "value": body,
         }
     ]
@@ -601,8 +601,8 @@ class MarkdownToBlogCodeParser:
 
         self.blocks.append({
             "name": "textArea",
-            "type": "p",
-            "attributes": {"class": "text-base my-4"},
+            "type": "div",
+            "attributes": {"class": "text-base my-4 rich-text"},
             "value": value,
         })
 
@@ -704,6 +704,7 @@ class SimpleHtmlToMarkdownParser(HTMLParser):
         self.in_code = False
         self.code_buffer = []
         self.color_stack = []
+        self.paragraph_starts = []
 
     # Farbe/Hintergrund eines Inline-Elements als (sicheren) Farb-Span erhalten.
     # Markdown kennt keine Farbe, daher Inline-HTML; _render_inline_markdown lässt
@@ -734,10 +735,14 @@ class SimpleHtmlToMarkdownParser(HTMLParser):
             self.parts.append("#" * level + " ")
         elif tag in ("h4", "h5", "h6"):
             self._ensure_block()
-        elif tag == "p":
+        elif tag in ("p", "div"):
             self._ensure_block()
+            if tag == "p":
+                self.paragraph_starts.append(len(self.parts))
         elif tag == "br":
-            self.parts.append("\n")
+            # A Markdown soft newline is folded into a space by the renderer.
+            # Keep explicit breaks, including Quill's empty <p><br></p> lines.
+            self.parts.append("<br>")
         elif tag in ("strong", "b"):
             self.parts.append("**")
         elif tag in ("em", "i"):
@@ -782,7 +787,12 @@ class SimpleHtmlToMarkdownParser(HTMLParser):
     def handle_endtag(self, tag):
         tag = tag.lower()
 
-        if tag in ("h1", "h2", "h3", "h4", "h5", "h6", "p"):
+        if tag == "p" and self.paragraph_starts:
+            start = self.paragraph_starts.pop()
+            if not "".join(self.parts[start:]).strip():
+                self.parts.append("<br>")
+
+        if tag in ("h1", "h2", "h3", "h4", "h5", "h6", "p", "div"):
             self._ensure_block()
         elif tag in ("strong", "b"):
             self.parts.append("**")
@@ -1171,7 +1181,7 @@ def render_blog_code_to_html(code):
         name = block.get("name")
         tag_name = block.get("type") or "div"
 
-        if name == "galery":
+        if name in ("galery", "textArea"):
             tag_name = "div"
         elif name == "code":
             tag_name = "code"

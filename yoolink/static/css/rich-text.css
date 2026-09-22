@@ -15,6 +15,21 @@
   margin-bottom: 0;
 }
 
+/* Keep Enter-created paragraphs visible in the blog editor, preview and article.
+   Quill and Tailwind otherwise reset the margins of unstyled paragraphs. */
+.blog-rt .ql-editor p + p,
+#previewBody p + p,
+article.format p + p {
+  margin-top: 1rem;
+}
+
+/* Quill's semantic HTML exports blank editor lines as empty paragraphs. */
+#previewBody p:empty,
+article.format p:empty {
+  min-height: 1em;
+  min-height: 1lh;
+}
+
 .rich-text h1,
 .rich-text h2 {
   font-size: 1.25rem;
